@@ -32,7 +32,7 @@ model Ipr {
   publicationOrigin             PublicationOrigin
   publicationCreationReason     PublicationCreationReason
   authorPublicNameType          AuthorPublicNameType
-  publicationObject             AublicationObjectType
+  publicationObject             PublicationObjectType
   publicationPublicData         String?
   paymentReceiptCode            String?                     @db.VarChar
 

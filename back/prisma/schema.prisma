@@ -14,7 +14,7 @@ model Author {
   patronymic        String                     @db.VarChar
   birthdate         DateTime                   @db.Date
   postalAddress     String                     @db.VarChar
-  iprUpdatesLogs    IprAuthorRelationships[]
+  iprUpdatesLogs    IprAuthorRelationship[]
 }
 
 model Ipr {
@@ -36,11 +36,11 @@ model Ipr {
   publicationPublicData         String?
   paymentReceiptCode            String?                     @db.VarChar
 
-  iprAuthorRelationships        IprAuthorRelationships[]
-  iprUpdatesLogs                IprUpdatesLogs[]
+  iprAuthorRelationships        IprAuthorRelationship[]
+  iprUpdatesLogs                IprUpdatesLog[]
 }
 
-model IprAuthorRelationships {
+model IprAuthorRelationship {
   id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   iprId     String @db.Uuid
   authorId  String @db.Uuid
@@ -48,7 +48,7 @@ model IprAuthorRelationships {
   ipr       Ipr    @relation(fields: [iprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model IprUpdatesLogs {
+model IprUpdatesLog {
   id                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt         DateTime              @default(now()) @db.Timestamptz(6)
   userId            String                @db.Uuid
@@ -59,20 +59,20 @@ model IprUpdatesLogs {
   documentNumber    String?               @db.VarChar
 
   ipr               Ipr                   @relation(fields: [affectedIprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user              Users                 @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user              User                  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model Organizations {
+model Organization {
   id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name              String  @db.VarChar
   addressCity       String? @db.VarChar
   addressDistrict   String? @db.VarChar
   addressStreet     String? @db.VarChar
   addressHouse      String? @db.VarChar
-  users             Users[]
+  users             User[]
 }
 
-model PassportAuthorities {
+model PassportAuthority {
   id        String  @id @db.Uuid
   code      String  @db.VarChar(4)
   name      String  @db.VarChar
@@ -80,9 +80,9 @@ model PassportAuthorities {
   address   String  @db.VarChar
 }
 
-model Users {
+model User {
   id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                 String             @db.VarChar(255)
+  email                 String             @db.VarChar(255) @unique
   password              String             @db.VarChar(72)
   createdAt             DateTime           @default(now()) @db.Timestamptz(6)
   role                  UserRole
@@ -98,8 +98,8 @@ model Users {
   organizationId        String?            @db.Uuid
   organizationPosition  String?            @db.VarChar
 
-  organization          Organizations?      @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  iprUpdatesLogs        IprUpdatesLogs[]
+  organization          Organization?      @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  iprUpdatesLogs        IprUpdatesLog[]
 }
 
 enum AuthorPublicNameType {

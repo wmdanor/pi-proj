@@ -1,10 +1,10 @@
 import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { JwtUserPayload } from '@modules/auth/models/jwt-user-payload';
 import { Request } from 'express';
 import { SignInResponse } from '@modules/auth/dtos/responses';
 import { SignInRequest } from '@modules/auth/dtos/requests';
 import { LocalAuthGuard } from '@modules/auth/guards/local.guard';
+import { User } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -16,10 +16,12 @@ export class AuthController {
     @Req() req: Request,
     @Body() body: SignInRequest,
   ): Promise<SignInResponse> {
-    const result = await this.authService.signIn(req.user as JwtUserPayload);
+    const user = req.user as User;
+    const result = await this.authService.signIn(user);
 
-    return {
+    return new SignInResponse({
       accessToken: result.accessToken,
-    };
+      user: user,
+    });
   }
 }
