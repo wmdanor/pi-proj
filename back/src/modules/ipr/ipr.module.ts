@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { IprController } from './ipr.controller';
 
-@Module({})
+@Module({
+  controllers: [IprController],
+})
 export class IprModule {}
