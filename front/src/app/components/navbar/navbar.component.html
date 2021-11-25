@@ -1,0 +1,26 @@
+<header class="p-1 bg-primary text-white">
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a routerLink='main' class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+        <img src="../../../assets/images/flag-ua.png" class="bi me-2" width="50" height="40" role="img" alt="ukraine-flag"/>
+      </a>
+
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a class="nav-link px-2 text-white" routerLink='main'>Головна</a></li>
+        <li><a class="nav-link px-2 text-white" routerLink='registrars' *ngIf="isAdmin()">Реєстратори</a></li>
+        <li><a class="nav-link px-2 text-white" routerLink='logs' *ngIf="isAdmin()">Журнал</a></li>
+      </ul>
+      <div class="text-end px-2">
+        <p class="m-0">Hello, {{currentUser?.firstName}}!</p>
+      </div>
+      <div class="text-end login-btn" *ngIf="!logged; else logOutBlock">
+        <button (click)="logIn()" type="button" class="btn btn-outline-light">Ввійти</button>
+      </div>
+      <ng-template #logOutBlock>
+        <div class="text-end logout-btn">
+          <button (click)="logOut()" type="button" class="btn btn-outline-light">Вийти</button>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</header>
