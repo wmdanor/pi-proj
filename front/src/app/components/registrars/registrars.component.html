@@ -1,0 +1,53 @@
+
+<div class="d-flex flex-wrap align-items-center justify-content-space-between">
+    <form [formGroup]="searchRegistrarForm" (ngSubmit)="searchRegistrar()" class="nav col-12 col-lg-auto me-lg-auto">
+        <div class="me-md-3 form-group">
+            <input type="text" class="form-control" formControlName="data" placeholder="Введіть дані для пошуку">            
+        </div>
+        <button type="submit" class="btn btn-primary btn-outline-light">Знайти реєстратора</button>
+    </form>
+    <div class="add-registrar-btn">
+        <button type="button" class="btn btn-primary btn-outline-light" (click)="addRegistrar()">Додати нового реєстратора</button>
+    </div>
+</div>
+<div *ngIf="loading; then loadingBlock else registrarsBlock"></div>
+<ng-template #loadingBlock>
+    <div class="d-flex flex-wrap align-items-center justify-content-center">
+        <span #loadingBlock *ngIf="loading"class="spinner-border spinner-border-sm mr-1 mt-3 ms-auto me-auto"></span>
+    </div>
+</ng-template>
+<ng-template #registrarsBlock>
+    <div class="registrars-list mt-3">
+        <ul class="list-group" *ngFor="let item of registrars">
+            <li class="list-group-item">
+                <div class="d-flex">
+                    <div class="d-flex flex-column mr-1">
+                        <p>ім'я: {{item.firstName}} </p>
+                        <p>Прізвище: {{item.lastName}}</p>
+                    </div> 
+                    почта: {{item.email}} 
+                </div>
+                
+                <a class="link" href="#" (click)="goToUser(item.id)">Детальніше...</a>
+            </li>
+
+        </ul>
+        <nav class="mt-2" aria-label="Page navigation example">
+            <ul class="pagination align-items-center justify-content-center">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            </ul>
+        </nav>
+    </div>
+</ng-template>
