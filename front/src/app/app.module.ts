@@ -19,6 +19,8 @@ import { RegistrarComponent } from './components/registrar/registrar.component';
 // used to create fake backend
 import { fakeBackendProvider } from './helpers/fake-backend';
 import { DataService } from './services/data.service';
+import { IprsComponent } from './components/iprs/iprs.component';
+import { IprComponent } from './components/ipr/ipr.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { DataService } from './services/data.service';
     LogsComponent,
     RegistrarsComponent,
     LoginComponent,
-    RegistrarComponent
+    RegistrarComponent,
+    IprsComponent,
+    IprComponent
   ],
   imports: [
     BrowserModule,

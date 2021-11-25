@@ -5,6 +5,8 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 
 import { User } from '../models/user';
 import { Role } from '../models/role';
+import { Ipr } from '../models/ipr';
+
 
 const users: User[] = [
     {
@@ -45,6 +47,22 @@ const users: User[] = [
     }
 ];
 
+const iprs : Ipr[] = [
+    {
+        id: '1',
+        authorPublicNameType: 'leonardo davinchi',
+        publicationType: 'Science',
+        publicationTitle: 'Architect'
+    },
+    {
+        id: '2',
+        authorPublicNameType: 'mikelandgelo',
+        publicationType: 'Art',
+        publicationTitle: 'Madinna doni'
+    },
+
+];
+
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -63,8 +81,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     return authenticate();
                 case url.endsWith('/users') && method === 'GET':
                     return getUsers();
+                case url.endsWith('/api/ipr') && method === 'GET':
+                    return getIprs();
+                case url.match(/\/ipr\/\d+$/) && method === 'GET':
+                    return getIprById();
                 case url.match(/\/users\/\d+$/) && method === 'GET':
                     return getUserById();
+                
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -73,6 +96,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         // route functions
+        function getIprs() {
+            console.log('INVOKED')
+            return ok(iprs);
+        }
+        function getIprById() {
+            console.log('INVOKED')
+            const ipr = iprs.find(x => x.id === idFromUrl());
+            return ok(ipr);
+        }
 
         function authenticate() {
             const { email, password } = body;

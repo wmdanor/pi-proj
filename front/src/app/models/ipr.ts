@@ -17,21 +17,21 @@ enum PublicationOrigin {
 
 
 export interface Ipr {
-    id: string
-    applicationNumber: bigint
-    applicationDate: Date
-    copyrightRegistrationNumber: bigint
-    copyrightRegistrationDate: Date
-    certificateIssueDate: Date
-    officialBulletinNumber: bigint
-    publicationSphereData: string
-    publicationType: string
-    publicationTitle: string
-    publicationAlternativeTitle: string | null
-    publicationOrigin: PublicationOrigin
-    publicationCreationReason: PublicationCreationReason
-    authorPublicNameType: AuthorPublicNameType
-    publicationObject: PublicationObjectType
-    publicationPublicData: string | null
-    paymentReceiptCode: string | null
+    id?: string
+    applicationNumber?: string
+    applicationDate?: string
+    copyrightRegistrationNumber?: string
+    copyrightRegistrationDate?: string
+    certificateIssueDate?: string
+    officialBulletinNumber?: string
+    publicationSphereData?: string
+    publicationType?: string
+    publicationTitle?: string
+    publicationAlternativeTitle?: string | null
+    publicationOrigin?: PublicationOrigin
+    publicationCreationReason?: PublicationCreationReason
+    authorPublicNameType?: string //AuthorPublicNameType
+    publicationObject?: PublicationObjectType
+    publicationPublicData?: string | null
+    paymentReceiptCode?: string | null
 }

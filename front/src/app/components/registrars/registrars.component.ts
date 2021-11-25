@@ -54,4 +54,8 @@ export class RegistrarsComponent implements OnInit {
     }));
   }
 
+  goToUser(userId: string){
+
+  }
+
 }
