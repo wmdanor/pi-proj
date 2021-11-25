@@ -1,18 +1,20 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TestModule } from '../test/test.module';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { config } from '../../config';
+import { IprModule } from '@modules/ipr/ipr.module';
+import { AuthModule } from '@modules/auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
+import { join } from 'path';
+import { JwtAuthGuard } from '@modules/auth/guards/jwt.guard';
+import { UsersModule } from '@modules/users/users.module';
 
 @Module({
   imports: [
-    ServeStaticModule.forRoot({
-      rootPath: config.staticPath,
+    ConfigModule.forRoot({
+      envFilePath: join(__dirname, './../../../', '.env'),
     }),
-    TestModule,
+    AuthModule,
+    IprModule,
+    UsersModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  providers: [JwtAuthGuard],
 })
 export class AppModule {}
