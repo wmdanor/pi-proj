@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  nginx-proxy:
+    build:
+      context: ./proxy
+    ports:
+      - "80:80"
+    container_name: nginx-proxy-container
+    restart: always
+    links:
+      - front
+      - back
+    depends_on:
+      - front
+      - back
+
+  front:
+    build:
+      context: ./front
+    ports:
+      - "4200:4200"
+    container_name: front-container
+    restart: always
+
+  back:
+    build:
+      context: ./back
+    ports:
+      - "3000:3000"
+    container_name: back-container
+    restart: always
+    links:
+      - database
+    depends_on:
+      - database
+
+  database:
+    build:
+      context: ./database
+    ports:
+      - "5432:5432"
+    container_name: db-container
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1

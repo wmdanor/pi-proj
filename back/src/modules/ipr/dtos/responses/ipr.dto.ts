@@ -1,4 +1,6 @@
-import { Ipr } from '@prisma/client';
+import {
+  Ipr,
+} from '@prisma/client';
 
 export class IprResponse {
   public id: string;

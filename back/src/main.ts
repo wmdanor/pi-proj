@@ -7,6 +7,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 async function createApp(module: any): Promise<INestApplication> {
   const app = await NestFactory.create(module);
 
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('Comicplex API')
     .setDescription('Comicplex API')

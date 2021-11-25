@@ -6,13 +6,23 @@ import { Ipr } from '@prisma/client';
 export class IprService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async getIpr(): Promise<Ipr[]> {
+  public async getIprs(): Promise<Ipr[]> {
     this.prisma.ipr.count();
 
     return this.prisma.ipr.findMany({
-      take: 10,
-      skip: 0,
+      // take: 10,
+      // skip: 0,
       where: {},
+    });
+  }
+
+  public async getIpr(id: string): Promise<Ipr> {
+    this.prisma.ipr.count();
+
+    return this.prisma.ipr.findUnique({
+      where: {
+        id,
+      },
     });
   }
 }
