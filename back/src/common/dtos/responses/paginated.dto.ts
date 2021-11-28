@@ -1,20 +1,17 @@
 import { PaginatedRequest } from '@common/dtos/requests/paginated.dto';
+import { mapObject } from '@common/utilities';
+import { Mapped } from '@common/types';
 
-export interface PaginatedResponseInit {
-  paginatedRequest: PaginatedRequest;
+export interface PaginatedResponseInit extends Mapped<PaginatedRequest> {
   count: number;
 }
 
 export class PaginatedResponse {
   public limit: number;
-
   public offset: number;
-
   public count: number;
 
-  constructor(init?: PaginatedResponseInit) {
-    this.limit = init?.paginatedRequest.limit;
-    this.offset = init?.paginatedRequest.offset;
-    this.count = init?.count;
+  constructor(init: PaginatedResponseInit) {
+    mapObject(init, this);
   }
 }

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { IprController } from './ipr.controller';
-import { IprService } from './ipr.service';
 import { CommonModule } from '@common/common.module';
+import { IprController } from '@modules/ipr/ipr.controller';
+import { IprService } from '@modules/ipr/ipr.service';
 
 @Module({
   imports: [CommonModule],

@@ -13,7 +13,7 @@ export class GetIprResponse extends PaginatedResponse {
   public data: Ipr[];
 
   constructor({ paginatedRequest, count, ipr }: GetIprResponseInit) {
-    super({ paginatedRequest, count });
+    super({ ...paginatedRequest, count });
 
     // this.data = ipr.map((ipr) => new IprResponse(ipr));
     this.data = ipr;

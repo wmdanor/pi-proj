@@ -2,67 +2,50 @@ import {
   Body,
   Controller,
   Get,
+  NotFoundException,
   Param,
   Post,
   Query,
-  Res,
-  UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '@modules/auth/guards/jwt.guard';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { GetIprRequest } from '@modules/ipr/dtos/requests/get-ipr.dto';
-import { GetIprResponse } from '@modules/ipr/dtos/responses/get-ipr.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { GetIprRequest } from '@modules/ipr/dtos/requests';
+import { GetIprResponse } from '@modules/ipr/dtos/responses';
+import { Public } from '@modules/auth/decorators';
 import { IprService } from '@modules/ipr/ipr.service';
-import { Response } from 'express';
 
+@ApiTags('Ipr')
 @Controller('ipr')
 export class IprController {
   constructor(private readonly iprService: IprService) {}
 
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Post()
   public async createIpr(@Body() body: any) {
     return body;
   }
 
+  @Public()
   @Get()
-  public async getIprs(
-    @Query() query: GetIprRequest,
-    @Res() res: Response,
-  ): Promise<unknown> {
+  public async getIprs(@Query() query: GetIprRequest): Promise<unknown> {
     const ipr = await this.iprService.getIprs();
 
-    console.log(1);
-    res.set('Content-Type', 'application/json');
-    console.log(2);
-    const response = new GetIprResponse({
+    return new GetIprResponse({
       paginatedRequest: query,
       count: 10,
       ipr,
     });
-    console.log(3);
-    const str = JSON.stringify(response, (_, v) =>
-      typeof v === 'bigint' ? v.toString() : v,
-    );
-    console.log(str);
-    console.log(JSON.parse(str));
-    return JSON.parse(str);
   }
 
+  @Public()
   @Get(':id')
-  public async getIpr(
-    @Param('id') id: string,
-    @Res() res: Response,
-  ): Promise<unknown> {
+  public async getIpr(@Param('id') id: string): Promise<unknown> {
     const ipr = await this.iprService.getIpr(id);
+    if (ipr === null) {
+      throw new NotFoundException();
+    }
 
-    res.set('Content-Type', 'application/json');
-    const response = {
+    return {
       data: ipr,
     };
-    return JSON.stringify(response, (_, v) =>
-      typeof v === 'bigint' ? v.toString() : v,
-    );
   }
 }
