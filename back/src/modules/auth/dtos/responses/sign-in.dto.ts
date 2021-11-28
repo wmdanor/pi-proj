@@ -1,6 +1,5 @@
 import { User } from '@prisma/client';
-
-type PublicUser = Omit<User, 'password'>;
+import { UserResponse } from '@modules/users/dtos/responses';
 
 export interface SignInResponseInit {
   accessToken: string;
@@ -9,12 +8,10 @@ export interface SignInResponseInit {
 
 export class SignInResponse {
   public accessToken: string;
-  public user: PublicUser;
+  public user: UserResponse;
 
   constructor({ accessToken, user }: SignInResponseInit) {
     this.accessToken = accessToken;
-    const userCopy = user;
-    delete userCopy.password;
-    this.user = userCopy;
+    this.user = new UserResponse(user);
   }
 }
