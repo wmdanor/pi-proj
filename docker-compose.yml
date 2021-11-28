@@ -34,14 +34,3 @@ services:
       - database
     depends_on:
       - database
-
-  database:
-    build:
-      context: ./database
-    ports:
-      - "5432:5432"
-    container_name: db-container
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1
