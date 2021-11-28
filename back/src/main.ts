@@ -10,8 +10,8 @@ async function createApp(module: any): Promise<INestApplication> {
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
-    .setTitle('Comicplex API')
-    .setDescription('Comicplex API')
+    .setTitle('--- API')
+    .setDescription('--- API')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -20,6 +20,7 @@ async function createApp(module: any): Promise<INestApplication> {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      whitelist: true,
     }),
   );
   app.use(cookieParser());

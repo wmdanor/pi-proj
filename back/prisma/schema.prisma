@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -8,114 +9,116 @@ datasource db {
 }
 
 model Author {
-  id                String                     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firstName         String                     @db.VarChar
-  lastName          String                     @db.VarChar
-  patronymic        String                     @db.VarChar
-  birthdate         DateTime                   @db.Date
-  postalAddress     String                     @db.VarChar
-  iprUpdatesLogs    IprAuthorRelationship[]
+  id             String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName      String
+  lastName       String
+  patronymic     String
+  birthdate      DateTime                @db.Date
+  postalAddress  String
+  iprUpdatesLogs IprAuthorRelationship[]
 }
 
 model Ipr {
-  id                            String                      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  applicationNumber             BigInt
-  applicationDate               DateTime                    @db.Date
-  copyrightRegistrationNumber   BigInt
-  copyrightRegistrationDate     DateTime                    @db.Date
-  certificateIssueDate          DateTime                    @db.Date
-  officialBulletinNumber        BigInt
-  publicationSphereData         String                      @db.VarChar
-  publicationType               String                      @db.VarChar
-  publicationTitle              String                      @db.VarChar
-  publicationAlternativeTitle   String?                     @db.VarChar
-  publicationOrigin             PublicationOrigin
-  publicationCreationReason     PublicationCreationReason
-  authorPublicNameType          AuthorPublicNameType
-  publicationObject             PublicationObjectType
-  publicationPublicData         String?
-  paymentReceiptCode            String?                     @db.VarChar
+  id                          String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  applicationNumber           String
+  applicationDate             DateTime
+  copyrightRegistrationNumber String
+  copyrightRegistrationDate   DateTime
+  certificateIssueDate        DateTime
+  officialBulletinNumber      String
+  publicationSphereData       String
+  publicationTitle            String
+  publicationAlternativeTitle String?
+  publicationObjectId         String               @db.Uuid
+  publicationOrigin           PublicationOrigin
+  publicationCreationReason   String
+  authorPublicNameType        AuthorPublicNameType
+  publicationPublicData       String?
+  paymentReceiptCode          String?
 
-  iprAuthorRelationships        IprAuthorRelationship[]
-  iprUpdatesLogs                IprUpdatesLog[]
+  publicationObject      PublicationObjectType   @relation(fields: [publicationObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  iprAuthorRelationships IprAuthorRelationship[]
+  iprUpdatesLogs         IprUpdatesLog[]
 }
 
 model IprAuthorRelationship {
-  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  iprId     String @db.Uuid
-  authorId  String @db.Uuid
-  author    Author @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ipr       Ipr    @relation(fields: [iprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  iprId    String @db.Uuid
+  authorId String @db.Uuid
+  author   Author @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ipr      Ipr    @relation(fields: [iprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model IprUpdatesLog {
-  id                String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt         DateTime              @default(now()) @db.Timestamptz(6)
-  userId            String                @db.Uuid
-  affectedIprId     String                @db.Uuid
-  type              IprUpdatesLogsType
-  updateReason      String                @db.VarChar
-  description       String                @db.VarChar
-  documentNumber    String?               @db.VarChar
+  id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt      DateTime           @default(now()) @db.Timestamptz(6)
+  userId         String             @db.Uuid
+  affectedIprId  String             @db.Uuid
+  type           IprUpdatesLogsType
+  updateReason   String
+  description    String
+  documentNumber String?
 
-  ipr               Ipr                   @relation(fields: [affectedIprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user              User                  @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ipr  Ipr  @relation(fields: [affectedIprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model Organization {
-  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name              String  @db.VarChar
-  addressCity       String? @db.VarChar
-  addressDistrict   String? @db.VarChar
-  addressStreet     String? @db.VarChar
-  addressHouse      String? @db.VarChar
-  users             User[]
+  id              String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  addressCity     String?
+  addressDistrict String?
+  addressStreet   String?
+  addressHouse    String?
+  users           User[]
 }
 
 model PassportAuthority {
-  id        String  @id @db.Uuid
-  code      String  @db.VarChar(4)
-  name      String  @db.VarChar
-  isActive  Boolean @default(true)
-  address   String  @db.VarChar
+  id       String  @id @db.Uuid
+  code     String  @db.VarChar(4)
+  name     String
+  isActive Boolean @default(true)
+  address  String
 }
 
 model User {
-  id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                 String             @db.VarChar(255) @unique
-  password              String             @db.VarChar(72)
-  createdAt             DateTime           @default(now()) @db.Timestamptz(6)
-  role                  UserRole
-  firstName             String             @db.VarChar
-  lastName              String             @db.VarChar
-  patronymic            String             @db.VarChar
-  birthDate             DateTime           @db.Date
-  passportSeries        String?            @db.VarChar
-  passportNumber        String             @db.VarChar
-  passportIssueDate     String             @db.VarChar
-  passportAuthority     String             @db.VarChar(4)
-  inn                   String?            @db.VarChar
-  organizationId        String?            @db.Uuid
-  organizationPosition  String?            @db.VarChar
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                String   @unique @db.VarChar(255)
+  password             String
+  createdAt            DateTime @default(now()) @db.Timestamptz(6)
+  role                 UserRole
+  firstName            String
+  lastName             String
+  patronymic           String
+  birthDate            DateTime @db.Date
+  passportSeries       String?
+  passportNumber       String
+  passportIssueDate    DateTime @db.Date
+  passportAuthority    String   @db.VarChar(4)
+  inn                  String?
+  organizationId       String?  @db.Uuid
+  organizationPosition String?
+  isActive             Boolean  @default(true)
 
-  organization          Organization?      @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  iprUpdatesLogs        IprUpdatesLog[]
+  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  iprUpdatesLogs IprUpdatesLog[]
+}
+
+model PublicationObjectType {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique
+  Ipr  Ipr[]
 }
 
 enum AuthorPublicNameType {
   Pseudonym
+  RealName
 }
 
 enum IprUpdatesLogsType {
-  Test
-}
-
-enum PublicationCreationReason {
-  Test
-}
-
-enum PublicationObjectType {
-  Test
+  Update
+  Delete
+  Create
 }
 
 enum PublicationOrigin {

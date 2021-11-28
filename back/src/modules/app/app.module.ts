@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
 import { IprModule } from '@modules/ipr/ipr.module';
-import { AuthModule } from '@modules/auth/auth.module';
+import { AuthModule } from '@modules/auth';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
-import { JwtAuthGuard } from '@modules/auth/guards/jwt.guard';
-import { UsersModule } from '@modules/users/users.module';
+import { JwtAuthGuard, RolesGuard } from '@modules/auth/guards';
+import { UsersModule } from '@modules/users';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -15,6 +16,15 @@ import { UsersModule } from '@modules/users/users.module';
     IprModule,
     UsersModule,
   ],
-  providers: [JwtAuthGuard],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
