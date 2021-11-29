@@ -4,7 +4,6 @@ import { Ipr } from '@prisma/client';
 
 export interface GetIprResponseInit {
   paginatedRequest: PaginatedRequest;
-  count: number;
   ipr: Ipr[];
 }
 
@@ -12,8 +11,8 @@ export class GetIprResponse extends PaginatedResponse {
   // public data: IprResponse[];
   public data: Ipr[];
 
-  constructor({ paginatedRequest, count, ipr }: GetIprResponseInit) {
-    super({ ...paginatedRequest, count });
+  constructor({ paginatedRequest, ipr }: GetIprResponseInit) {
+    super({ ...paginatedRequest });
 
     // this.data = ipr.map((ipr) => new IprResponse(ipr));
     this.data = ipr;

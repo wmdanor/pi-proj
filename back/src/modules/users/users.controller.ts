@@ -40,10 +40,9 @@ export class UsersController {
     @Query() query: GetRecordersRequest,
   ): Promise<GetRecordersResponse> {
     // TODO: may be a good idea to create separate endpoint for counting
-    const count = await this.usersService.countRecorders(query);
     const data = await this.usersService.getRecorders(query);
 
-    return new GetRecordersResponse({ ...query, count, data });
+    return new GetRecordersResponse({ ...query, data });
   }
 
   @ApiBearerAuth()
@@ -102,9 +101,9 @@ export class UsersController {
   @Put('recorders/:id/activate')
   public async activateRecorder(
     @Param() { id }: UuidParamRequest,
-    @Body() body: ActivateRecorderRequest,
+    @Body() { isActive }: ActivateRecorderRequest,
   ): Promise<void> {
-    const data = await this.usersService.updateRecorder(id, body);
+    const data = await this.usersService.activateRecorder(id, isActive);
     if (data === null) {
       throw new NotFoundException();
     }

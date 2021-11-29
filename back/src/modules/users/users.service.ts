@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@common/services';
-import { User, UserRole } from '@prisma/client';
+import { Prisma, User, UserRole } from '@prisma/client';
 import {
   CountRecordersRequest,
   CreateRecorderRequest,
@@ -83,53 +83,63 @@ export class UsersService {
 
   public async countRecorders(query: CountRecordersRequest): Promise<number> {
     const { q } = query;
-    const parsedQuery = q.split(' ').join(' | ');
-
-    return this.prisma.user.count({
+    const args: Prisma.UserCountArgs = {
       where: {
         role: UserRole.Recorder,
-        OR: {
-          firstName: {
-            search: parsedQuery,
-            mode: 'insensitive',
-          },
-          lastName: {
-            search: parsedQuery,
-            mode: 'insensitive',
-          },
-          patronymic: {
-            search: parsedQuery,
-            mode: 'insensitive',
-          },
-        },
       },
-    });
+    };
+
+    if (q) {
+      const parsedQuery = q.split(' ').join(' | ');
+
+      args.where.OR = {
+        firstName: {
+          search: parsedQuery,
+          mode: 'insensitive',
+        },
+        lastName: {
+          search: parsedQuery,
+          mode: 'insensitive',
+        },
+        patronymic: {
+          search: parsedQuery,
+          mode: 'insensitive',
+        },
+      };
+    }
+
+    return this.prisma.user.count(args);
   }
 
   public async getRecorders(query: GetRecordersRequest): Promise<User[]> {
     const { q, limit, offset } = query;
-    const parsedQuery = q.split(' ').join(' | ');
-
-    return this.prisma.user.findMany({
+    const args: Prisma.UserFindManyArgs = {
       skip: offset,
       take: limit,
       where: {
         role: UserRole.Recorder,
-        OR: {
-          firstName: {
-            search: parsedQuery,
-            mode: 'insensitive',
-          },
-          lastName: {
-            search: parsedQuery,
-            mode: 'insensitive',
-          },
-          patronymic: {
-            search: parsedQuery,
-            mode: 'insensitive',
-          },
-        },
       },
-    });
+    };
+
+    if (q) {
+      const parsedQuery = q.split(' ').join(' | ');
+
+      args.where.OR = {
+        firstName: {
+          search: parsedQuery,
+          mode: 'insensitive',
+        },
+        lastName: {
+          search: parsedQuery,
+          mode: 'insensitive',
+        },
+        patronymic: {
+          search: parsedQuery,
+          mode: 'insensitive',
+        },
+      };
+    }
+
+    return this.prisma.user.findMany(args);
   }
 }

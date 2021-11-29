@@ -13,7 +13,7 @@ export function mapObject<
   if (options?.strict === undefined) options.strict = true;
 
   let result = Object.entries(source);
-  result = result.filter(([key]) => !options.exclude.includes(key));
+  result = result.filter(([key]) => !options.exclude?.includes(key));
 
   // if (options.strict)
   //   result = result.filter(([key]) => (key as keyof D) in KeyOfDest);
