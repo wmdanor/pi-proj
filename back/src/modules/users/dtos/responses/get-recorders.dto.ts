@@ -5,7 +5,6 @@ import { UserResponse } from '@modules/users/dtos/responses';
 import { Mapped } from '@common/types';
 
 export interface GetRecordersResponseInit extends Mapped<PaginatedRequest> {
-  count: number;
   data: User[];
 }
 

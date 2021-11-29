@@ -1,6 +1,6 @@
 import {
+  IsDate,
   IsEmail,
-  IsISO8601,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -27,7 +27,7 @@ export class CreateRecorderRequest {
   public patronymic: string;
 
   @Type(() => Date)
-  @IsISO8601()
+  @IsDate()
   public birthDate: Date;
 
   @IsNotEmpty()
@@ -39,7 +39,7 @@ export class CreateRecorderRequest {
   public passportNumber: string;
 
   @Type(() => Date)
-  @IsISO8601()
+  @IsDate()
   public passportIssueDate: Date;
 
   @IsString()

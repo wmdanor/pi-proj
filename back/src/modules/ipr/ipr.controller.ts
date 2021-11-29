@@ -31,7 +31,6 @@ export class IprController {
 
     return new GetIprResponse({
       paginatedRequest: query,
-      count: 10,
       ipr,
     });
   }

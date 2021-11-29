@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["fullTextSearch"]
 }
 
@@ -9,17 +9,19 @@ datasource db {
 }
 
 model Author {
-  id             String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firstName      String
-  lastName       String
-  patronymic     String
-  birthdate      DateTime                @db.Date
-  postalAddress  String
-  iprUpdatesLogs IprAuthorRelationship[]
+  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName         String
+  lastName          String
+  patronymic        String
+  publicNameType    AuthorPublicNameType
+  publicName        String
+  birthdate         DateTime @db.Date
+  postalAddress     String
+  iprs              Ipr[]
 }
 
 model Ipr {
-  id                          String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                          String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   applicationNumber           String
   applicationDate             DateTime
   copyrightRegistrationNumber String
@@ -29,38 +31,29 @@ model Ipr {
   publicationSphereData       String
   publicationTitle            String
   publicationAlternativeTitle String?
-  publicationObjectId         String               @db.Uuid
+  publicationObject           PublicationObjectType @relation(fields: [publicationObjectTypeId], references: [id])
   publicationOrigin           PublicationOrigin
   publicationCreationReason   String
-  authorPublicNameType        AuthorPublicNameType
+  author                      Author                @relation(fields: [authorId], references: [id])
   publicationPublicData       String?
   paymentReceiptCode          String?
 
-  publicationObject      PublicationObjectType   @relation(fields: [publicationObjectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  iprAuthorRelationships IprAuthorRelationship[]
-  iprUpdatesLogs         IprUpdatesLog[]
-}
-
-model IprAuthorRelationship {
-  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  iprId    String @db.Uuid
-  authorId String @db.Uuid
-  author   Author @relation(fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  ipr      Ipr    @relation(fields: [iprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  iprUpdatesLogs          IprUpdatesLog[]
+  publicationObjectTypeId String          @db.Uuid
+  authorId                String          @db.Uuid
 }
 
 model IprUpdatesLog {
   id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   createdAt      DateTime           @default(now()) @db.Timestamptz(6)
-  userId         String             @db.Uuid
-  affectedIprId  String             @db.Uuid
+  ipr            Ipr                @relation(fields: [iprId], references: [id])
+  user           User               @relation(fields: [userId], references: [id])
   type           IprUpdatesLogsType
   updateReason   String
   description    String
   documentNumber String?
-
-  ipr  Ipr  @relation(fields: [affectedIprId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user User @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  iprId          String             @db.Uuid
+  userId         String             @db.Uuid
 }
 
 model Organization {
@@ -82,26 +75,26 @@ model PassportAuthority {
 }
 
 model User {
-  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email                String   @unique @db.VarChar(255)
+  id                   String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email                String        @unique @db.VarChar(255)
   password             String
-  createdAt            DateTime @default(now()) @db.Timestamptz(6)
+  createdAt            DateTime      @default(now()) @db.Timestamptz(6)
   role                 UserRole
   firstName            String
   lastName             String
   patronymic           String
-  birthDate            DateTime @db.Date
+  birthDate            DateTime      @db.Date
   passportSeries       String?
   passportNumber       String
-  passportIssueDate    DateTime @db.Date
-  passportAuthority    String   @db.VarChar(4)
+  passportIssueDate    DateTime      @db.Date
+  passportAuthority    String        @db.VarChar(4)
   inn                  String?
-  organizationId       String?  @db.Uuid
+  organization         Organization? @relation(fields: [organizationId], references: [id])
   organizationPosition String?
-  isActive             Boolean  @default(true)
+  isActive             Boolean       @default(true)
 
-  organization   Organization?   @relation(fields: [organizationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  iprUpdatesLogs IprUpdatesLog[]
+  iprUpdatesLogs       IprUpdatesLog[]
+  organizationId       String?         @db.Uuid
 }
 
 model PublicationObjectType {
