@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
@@ -16,6 +16,10 @@ export class AuthService {
     const user = await this.usersService.getUserByEmail(email);
 
     if (user && (await bcrypt.compare(password, user.password))) {
+      if (!user.isActive) {
+        throw new UnauthorizedException('User is deactivated');
+      }
+
       return user;
     }
 
