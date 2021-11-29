@@ -1,4 +1,3 @@
-
 <div class="d-flex flex-wrap align-items-center justify-content-space-between">
     <form [formGroup]="searchRegistrarForm" (ngSubmit)="searchRegistrar()" class="nav col-12 col-lg-auto me-lg-auto">
         <div class="me-md-3 form-group">
@@ -27,10 +26,14 @@
                     </div> 
                     почта: {{item.email}} 
                 </div>
+                <a class="link" (click)="goToUser(item.id)">Детальніше...</a>
+                <div class="admin-funcs" *ngIf="isAdmin()">
+                    <button class="btn btn-danger">деактивувати</button>
+                    <button class="btn btn-success">активувати</button>
+                    <a class="link" (click)="editRegistrar(item.id)">Змінити</a>
+                </div>
                 
-                <a class="link" href="#" (click)="goToUser(item.id)">Детальніше...</a>
             </li>
-
         </ul>
         <nav class="mt-2" aria-label="Page navigation example">
             <ul class="pagination align-items-center justify-content-center">
@@ -43,8 +46,8 @@
             <li class="page-item"><a class="page-link" href="#">2</a></li>
             <li class="page-item"><a class="page-link" href="#">3</a></li>
             <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
+                <a class="page-link" role="button" aria-label="Next">
+                <span (click)="nextPage()" aria-hidden="true">&raquo;</span>
                 </a>
             </li>
             </ul>

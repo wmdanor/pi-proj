@@ -1,36 +1,36 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { IprComponent } from './components/ipr/ipr.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { MainComponent } from './components/main/main.component';
-import { RegistrarsComponent } from './components/registrars/registrars.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { Role } from './models/role';
 const routes: Routes = [
+  //all user pathes
   { 
     path: 'home', 
     component: MainComponent
   },
-  {
-    path: 'ipr/:id', 
-    component: IprComponent ,
+  { 
+    path: 'login', 
+    component: LoginComponent
   },
   { 
-    path: 'registrars', 
-    component: RegistrarsComponent,
+    path: 'ipr', 
+    loadChildren: () => import('./modules/iprs/iprs.module').then(m => m.IprsModule)
+  },
+  //only admin pathes
+  { 
+    path: 'registrar', 
+    loadChildren: () => import('./modules/registrars/registrars.module').then(m => m.RegistrarsModule),
     canActivate: [AuthGuard],
-    data: { roles: [Role.Admin] }
+    data: { roles: [Role.Admin] } 
   },
   { 
     path: 'logs', 
     component: LogsComponent,
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
-  },
-  { 
-    path: 'login', 
-    component: LoginComponent
   },
   { path: '**', redirectTo: 'home' }
 ];

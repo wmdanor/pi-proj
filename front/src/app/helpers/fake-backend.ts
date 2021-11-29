@@ -10,7 +10,7 @@ import { Ipr } from '../models/ipr';
 
 const users: User[] = [
     {
-        "id": "40f7f5fc-62f8-4463-ba4f-7e2428f1feaa",
+        "id": "zxz",
         "email": "admin",
         "createdAt": "2021-11-24T19:44:08.858Z",
         role: Role.Admin,
@@ -67,7 +67,7 @@ const iprs : Ipr[] = [
 export class FakeBackendInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         const { url, method, headers, body } = request;
-
+        
         // wrap in delayed observable to simulate server api call
         return of(null)
             .pipe(mergeMap(handleRoute))
@@ -79,15 +79,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             switch (true) {
                 case url.endsWith('/api/auth/sign-in') && method === 'POST':
                     return authenticate();
-                case url.endsWith('/users') && method === 'GET':
-                    return getUsers();
                 case url.endsWith('/api/ipr') && method === 'GET':
                     return getIprs();
                 case url.match(/\/ipr\/\d+$/) && method === 'GET':
                     return getIprById();
-                case url.match(/\/users\/\d+$/) && method === 'GET':
+                case url.match(/\/registrar\/\w+$/) && method === 'GET':
                     return getUserById();
-                
+                case url.endsWith('/api/registrar?limit=10&offset=0') && method === 'GET':
+                    return getUsers();
                 default:
                     // pass through any requests not handled above
                     return next.handle(request);
@@ -97,11 +96,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // route functions
         function getIprs() {
-            console.log('INVOKED')
             return ok(iprs);
         }
         function getIprById() {
-            console.log('INVOKED')
             const ipr = iprs.find(x => x.id === idFromUrl());
             return ok(ipr);
         }
