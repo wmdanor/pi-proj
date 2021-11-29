@@ -38,8 +38,7 @@ import { DataService } from './services/data.service';
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     DataService,
 
-    // provider used to create fake backend
-    fakeBackendProvider
+    
 ],
   bootstrap: [AppComponent]
 })
