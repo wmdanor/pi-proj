@@ -3,19 +3,30 @@ import { AppModule } from '@modules/app/app.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+// import { resolve } from 'path';
+// import { writeFileSync } from 'fs';
+
+const basePath = process.env.BASE_PATH || 'api';
 
 async function createApp(module: any): Promise<INestApplication> {
   const app = await NestFactory.create(module);
 
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(basePath);
 
   const config = new DocumentBuilder()
     .setTitle('--- API')
     .setDescription('--- API')
     .setVersion('1.0')
+    .setBasePath(basePath)
+    .addBearerAuth(
+      { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+      'access-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api', app, document);
+  SwaggerModule.setup(basePath + '/docs', app, document);
+  // const outputPath = resolve(process.cwd(), 'openapi.json');
+  // writeFileSync(outputPath, JSON.stringify(document), { encoding: 'utf8' });
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -23,7 +34,10 @@ async function createApp(module: any): Promise<INestApplication> {
       whitelist: true,
     }),
   );
+
   app.use(cookieParser());
+
+  app.enableCors();
 
   return app;
 }
