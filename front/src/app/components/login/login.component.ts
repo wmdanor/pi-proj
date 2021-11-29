@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   returnUrl: string | undefined;
   error = '';
   message = 'Logged in!';
+  passwordType = 'password';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -64,5 +65,15 @@ export class LoginComponent implements OnInit {
               this.error = error;
               this.loading = false;
           });
+  }
+
+  showPassword(){
+    if (this.passwordType === 'text')
+    {
+      this.passwordType = 'password';
+    } else {
+      this.passwordType = 'text';
+    }
+    
   }
 }

@@ -1,0 +1,62 @@
+<div class="container">
+    <h4 class="mb-3 d-flex align-items-center justify-content-center">Додати реєстратора</h4>
+    <form  [formGroup]="addRegistrarFrom" ngNativeValidate class="form-horizontal" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+            <div class="col-12">
+            <label for="email" class="form-label">Електронна почта </label>
+            <input formControlName="email" type="email" class="form-control" id="email" placeholder="you@example.com" required >
+            </div>
+            <hr class="my-4">
+            <h5 class="mb-3">Паспортні дані</h5>
+            <div class="col-12">
+                <label for="fullName" class="form-label">ПІБ</label>
+                <input formControlName="fullName" type="text" class="form-control" id="fullName"  required>
+            
+            </div>
+
+            <div class="col-6">
+                <label  for="address2" class="form-label">Дата народження  </label>
+                <input formControlName="birthDate" type="date" class="form-control" required>
+            </div>
+            <div class="col-6">
+                
+            </div>
+            <div class="col-6">
+            <label for="country" class="form-label">Серія  <span class="text-muted">(За наявності)</span></label>
+            <input formControlName="passportSeries" type="text" class="form-control">
+            </div>
+
+            <div class="col-6">
+                <label for="country" class="form-label">Номер </label>
+                <input formControlName="passportNumber" type="text" class="form-control" required>
+            </div>
+
+            <div class="col-6">
+                <label for="address2" class="form-label">Дата видачі   </label>
+                <input formControlName="passportIssueDate" type="date" class="form-control" required>
+            </div>
+            <div class="col-6">
+                <label for="address2" class="form-label">Орган що видав  </label>
+                <input formControlName="passportAuthority" type="text" class="form-control" required>
+            </div>
+            
+            <hr class="my-4">
+
+            <div class="col-12">
+                <label for="address2" class="form-label">ІПН <span class="text-muted">(За наявності)</span> </label>
+                <input formControlName="inn" type="text" class="form-control"   >
+            </div>
+            <hr class="my-4">
+            <h5 class="mb-3">Дані про організацію в якій працює реєстратор</h5>
+            <div class="col-12">
+                <label for="address2" class="form-label">Назва</label>
+                <input formControlName="organizationId" type="text" class="form-control"    required>
+            </div>
+            <div class="col-12">
+                <label for="address2" class="form-label">Посада</label>
+                <input formControlName="organizationPosition" type="text" class="form-control"   required>
+            </div>
+            <button class="w-40 btn btn-primary" type="submit">Додати</button>
+        </div>
+    </form>
+  </div>

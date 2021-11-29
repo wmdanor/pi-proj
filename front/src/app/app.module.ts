@@ -11,16 +11,13 @@ import { JwtInterceptor } from './helpers/jwt.interceptor';
 
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { MainComponent } from './components/main/main.component';
-import { RegistrarsComponent } from './components/registrars/registrars.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { LoginComponent } from './components/login/login.component';
-import { RegistrarComponent } from './components/registrar/registrar.component';
 
 // used to create fake backend
 import { fakeBackendProvider } from './helpers/fake-backend';
 import { DataService } from './services/data.service';
-import { IprsComponent } from './components/iprs/iprs.component';
-import { IprComponent } from './components/ipr/ipr.component';
+
 
 @NgModule({
   declarations: [
@@ -28,11 +25,7 @@ import { IprComponent } from './components/ipr/ipr.component';
     NavbarComponent,
     MainComponent,
     LogsComponent,
-    RegistrarsComponent,
     LoginComponent,
-    RegistrarComponent,
-    IprsComponent,
-    IprComponent
   ],
   imports: [
     BrowserModule,
