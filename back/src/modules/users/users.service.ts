@@ -24,6 +24,9 @@ export class UsersService {
       where: {
         email,
       },
+      include: {
+        organization: true,
+      },
     });
   }
 
@@ -40,6 +43,9 @@ export class UsersService {
         ...props,
         role: UserRole.Recorder,
         password: encryptedPassword,
+      },
+      include: {
+        organization: true,
       },
     };
 
@@ -65,6 +71,9 @@ export class UsersService {
         id,
         role: UserRole.Recorder,
       },
+      include: {
+        organization: true,
+      },
     });
   }
 
@@ -75,6 +84,9 @@ export class UsersService {
       },
       where: {
         id,
+      },
+      include: {
+        organization: true,
       },
     });
   }
@@ -89,6 +101,9 @@ export class UsersService {
       },
       where: {
         id,
+      },
+      include: {
+        organization: true,
       },
     });
   }
@@ -130,6 +145,9 @@ export class UsersService {
       take: limit,
       where: {
         role: UserRole.Recorder,
+      },
+      include: {
+        organization: true,
       },
     };
 

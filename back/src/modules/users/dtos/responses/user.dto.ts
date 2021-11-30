@@ -1,5 +1,6 @@
 import { User, UserRole } from '@prisma/client';
 import { mapObject } from '@common/utilities';
+import { OrganizationResponse } from '@modules/users/dtos/responses/organization.dto';
 
 export class UserResponse {
   public id: string;
@@ -15,6 +16,7 @@ export class UserResponse {
   public passportIssueDate: Date;
   public passportAuthority: string;
   public inn: string | null;
+  public organization: OrganizationResponse | null;
   public organizationId: string | null;
   public organizationPosition: string | null;
 
