@@ -1,4 +1,11 @@
-import { IsString, MinLength, NotEquals, ValidateIf } from 'class-validator';
+import {
+  IsDate,
+  IsString,
+  MinLength,
+  NotEquals,
+  ValidateIf,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class UpdateRecorderRequest {
   @NotEquals(null)
@@ -30,4 +37,16 @@ export class UpdateRecorderRequest {
   @IsString()
   @MinLength(1)
   public passportNumber?: string;
+
+  @NotEquals(null)
+  @ValidateIf((object, value) => value !== undefined)
+  @IsString()
+  @MinLength(1)
+  public passportAuthority?: string;
+
+  @NotEquals(null)
+  @ValidateIf((object, value) => value !== undefined)
+  @Type(() => Date)
+  @IsDate()
+  public passportIssueDate?: string;
 }

@@ -19,6 +19,7 @@ import {
 import {
   CountIprsResponse,
   CreateIprResponse,
+  GetIprObjectTypesResponse,
   GetIprResponse,
   GetIprsResponse,
   UpdateIprResponse,
@@ -26,7 +27,6 @@ import {
 import { Public, Roles } from '@modules/auth/decorators';
 import { IprService } from '@modules/ipr/ipr.service';
 import { UuidParamRequest } from '@common/dtos/requests';
-import { GetIprFiltersResponse } from '@modules/users/dtos/responses';
 import { Request } from 'express';
 import { User, UserRole } from '@prisma/client';
 
@@ -36,7 +36,7 @@ export class IprController {
   constructor(private readonly iprService: IprService) {}
 
   @Public()
-  @Get()
+  @Get('filter')
   public async getIprs(
     @Query() query: GetIprsRequest,
   ): Promise<GetIprsResponse> {
@@ -46,7 +46,7 @@ export class IprController {
   }
 
   @Public()
-  @Get()
+  @Get('count')
   public async countIprs(
     @Query() query: CountIprsRequest,
   ): Promise<CountIprsResponse> {
@@ -56,11 +56,11 @@ export class IprController {
   }
 
   @Public()
-  @Get('filters')
-  public async getIprFilters(): Promise<GetIprFiltersResponse> {
-    const data = await this.iprService.getIprFilters();
+  @Get('object-types')
+  public async getIprFilters(): Promise<GetIprObjectTypesResponse> {
+    const data = await this.iprService.getIprObjectTypes();
 
-    return new GetIprFiltersResponse(data);
+    return new GetIprObjectTypesResponse({ data });
   }
 
   @ApiBearerAuth()
@@ -88,14 +88,14 @@ export class IprController {
     return new GetIprResponse(data);
   }
 
-  @Public()
   @Put(':id')
   // TODO: create guard
   public async updateIpr(
     @Param() { id }: UuidParamRequest,
     @Body() body: UpdateIprRequest,
+    @Req() req: Request,
   ): Promise<UpdateIprResponse> {
-    const data = await this.iprService.updateIpr(id, body);
+    const data = await this.iprService.updateIpr(id, body, req.user as User);
 
     return new UpdateIprResponse(data);
   }

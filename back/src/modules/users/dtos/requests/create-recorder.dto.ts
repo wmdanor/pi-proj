@@ -4,11 +4,31 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUUID,
   Length,
-  MinLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
+export class CreateRecorderRequestOrganization {
+  @IsString()
+  @IsNotEmpty()
+  public name: string;
+
+  @IsOptional()
+  @IsString()
+  public addressCity?: string;
+
+  @IsOptional()
+  @IsString()
+  public addressDistrict?: string;
+
+  @IsOptional()
+  @IsString()
+  public addressStreet?: string;
+
+  @IsOptional()
+  @IsString()
+  public addressHouse?: string;
+}
 
 export class CreateRecorderRequest {
   @IsEmail()
@@ -48,15 +68,12 @@ export class CreateRecorderRequest {
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
   public inn?: string;
 
   @IsOptional()
-  @IsUUID()
-  public organizationId?: string;
+  public organization?: CreateRecorderRequestOrganization;
 
   @IsOptional()
   @IsString()
-  @MinLength(1)
   public organizationPosition?: string;
 }

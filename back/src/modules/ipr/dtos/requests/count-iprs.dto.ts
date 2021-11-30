@@ -15,5 +15,5 @@ export class CountIprsRequest {
 
   @IsOptional()
   @IsString()
-  public publicationObject?: string;
+  public publicationObjectTypeId?: string;
 }

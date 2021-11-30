@@ -1,7 +1,7 @@
-import { Ipr, PublicationObjectType } from '@prisma/client';
+import { Ipr } from '@prisma/client';
 import { mapObject } from '@common/utilities';
-
-class Author {}
+import { IprObjectTypeResponse } from '@modules/ipr/dtos/responses/ipr-object-type.dto';
+import { IprAuthorResponse } from '@modules/ipr/dtos/responses/ipr-author.dto';
 
 export class IprResponse {
   public id: string;
@@ -20,8 +20,8 @@ export class IprResponse {
   public paymentReceiptCode: string | null;
   public publicationObjectTypeId: string;
   public userId: string;
-  public publicationObject: PublicationObjectType;
-  public authors: Author[];
+  public publicationObject: IprObjectTypeResponse;
+  public authors: IprAuthorResponse[];
 
   constructor(init: Ipr) {
     mapObject(init, this);

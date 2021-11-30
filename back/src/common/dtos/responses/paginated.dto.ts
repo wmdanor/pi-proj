@@ -6,6 +6,8 @@ export class PaginatedResponse {
   public offset: number;
 
   constructor(init: PaginatedRequest) {
-    mapObject(init, this);
+    mapObject(init, this, {
+      include: ['limit', 'offset'],
+    });
   }
 }
