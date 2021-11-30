@@ -3,6 +3,7 @@ import { AppModule } from '@modules/app/app.module';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as morgan from 'morgan';
 // import { resolve } from 'path';
 // import { writeFileSync } from 'fs';
 
@@ -17,7 +18,6 @@ async function createApp(module: any): Promise<INestApplication> {
     .setTitle('--- API')
     .setDescription('--- API')
     .setVersion('1.0')
-    .setBasePath(basePath)
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'access-token',
@@ -34,6 +34,8 @@ async function createApp(module: any): Promise<INestApplication> {
       whitelist: true,
     }),
   );
+
+  app.use(morgan('tiny'));
 
   app.use(cookieParser());
 

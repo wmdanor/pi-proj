@@ -33,16 +33,28 @@ export class UsersService {
     });
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    const result = await this.prisma.user.create({
+    const { organization, ...props } = data;
+
+    const args: Prisma.UserCreateArgs = {
       data: {
-        ...data,
+        ...props,
         role: UserRole.Recorder,
         password: encryptedPassword,
       },
-    });
+    };
+
+    if (organization) {
+      args.data.organization = {
+        create: organization,
+      };
+    }
+
+    const result = await this.prisma.user.create(args);
 
     // TODO: Send email
-    console.log('Email sent');
+    console.log(
+      `Email sent: "Your account credentials ${data.email} | ${password}"`,
+    );
 
     return result;
   }

@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
-import { IprModule } from '@modules/ipr/ipr.module';
+import { IprModule } from '@modules/ipr';
 import { AuthModule } from '@modules/auth';
 import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { JwtAuthGuard, RolesGuard } from '@modules/auth/guards';
 import { UsersModule } from '@modules/users';
 import { APP_GUARD } from '@nestjs/core';
+import { LogsModule } from '@modules/logs-m';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { APP_GUARD } from '@nestjs/core';
     AuthModule,
     IprModule,
     UsersModule,
+    LogsModule,
   ],
   providers: [
     {

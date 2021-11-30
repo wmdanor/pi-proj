@@ -16,5 +16,5 @@ export class GetIprsRequest extends PaginatedRequest {
 
   @IsOptional()
   @IsString()
-  public publicationObject?: string;
+  public publicationObjectTypeId?: string;
 }

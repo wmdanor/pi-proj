@@ -7,13 +7,19 @@ export function mapObject<
   options?: {
     strict?: boolean;
     exclude?: (keyof S)[];
+    include?: (keyof S)[];
   },
 ) {
   if (options === undefined) options = {};
   if (options?.strict === undefined) options.strict = true;
 
   let result = Object.entries(source);
-  result = result.filter(([key]) => !options.exclude?.includes(key));
+  result = options.exclude
+    ? result.filter(([key]) => !options.exclude?.includes(key))
+    : result;
+  result = options.include
+    ? result.filter(([key]) => options.include?.includes(key))
+    : result;
 
   // if (options.strict)
   //   result = result.filter(([key]) => (key as keyof D) in KeyOfDest);

@@ -1,6 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '@common/services';
-import { Ipr, Prisma } from '@prisma/client';
+import {
+  Ipr,
+  IprUpdatesLogsType,
+  Prisma,
+  PublicationObjectType,
+  User,
+  UserRole,
+} from '@prisma/client';
 import {
   CountIprsRequest,
   CreateIprRequest,
@@ -12,123 +19,30 @@ import {
 export class IprService {
   constructor(private readonly prisma: PrismaService) {}
 
-  public async getIprFilters(): Promise<unknown> {
-    // TODO
-    return {};
+  public async getIprObjectTypes(): Promise<PublicationObjectType[]> {
+    return this.prisma.publicationObjectType.findMany();
   }
 
   public async getIprs(query: GetIprsRequest): Promise<Ipr[]> {
-    const {
-      limit,
-      offset,
-      publicationTitle,
-      publicationObject,
-      authorName,
-      copyrightRegistrationNumber,
-    } = query;
+    const { limit, offset } = query;
 
     const args: Prisma.IprFindManyArgs = {
       take: limit,
       skip: offset,
-      where: {},
+      where: IprService.generateIprWhereInput(query),
       include: {
         publicationObject: true,
         authors: true,
       },
     };
 
-    if (!copyrightRegistrationNumber) {
-      args.where.copyrightRegistrationNumber = copyrightRegistrationNumber;
-    }
-
-    if (!publicationTitle) {
-      args.where.publicationTitle = {
-        contains: publicationTitle,
-        mode: 'insensitive',
-      };
-    }
-
-    if (!publicationObject) {
-      args.where.publicationObject = {
-        is: {
-          name: publicationObject,
-        },
-      };
-    }
-
-    if (!authorName) {
-      const parsedAuthorName = authorName.split(' ').join(' | ');
-      args.where.authors = {
-        some: {
-          firstName: {
-            search: parsedAuthorName,
-            mode: 'insensitive',
-          },
-          lastName: {
-            search: parsedAuthorName,
-            mode: 'insensitive',
-          },
-          patronymic: {
-            search: parsedAuthorName,
-            mode: 'insensitive',
-          },
-        },
-      };
-    }
-
     return this.prisma.ipr.findMany(args);
   }
 
   public async countIprs(query: CountIprsRequest): Promise<number> {
-    const {
-      publicationTitle,
-      publicationObject,
-      authorName,
-      copyrightRegistrationNumber,
-    } = query;
-
     const args: Prisma.IprCountArgs = {
-      where: {},
+      where: IprService.generateIprWhereInput(query),
     };
-
-    if (!copyrightRegistrationNumber) {
-      args.where.copyrightRegistrationNumber = copyrightRegistrationNumber;
-    }
-
-    if (!publicationTitle) {
-      args.where.publicationTitle = {
-        contains: publicationTitle,
-        mode: 'insensitive',
-      };
-    }
-
-    if (!publicationObject) {
-      args.where.publicationObject = {
-        is: {
-          name: publicationObject,
-        },
-      };
-    }
-
-    if (!authorName) {
-      const parsedAuthorName = authorName.split(' ').join(' | ');
-      args.where.authors = {
-        some: {
-          firstName: {
-            search: parsedAuthorName,
-            mode: 'insensitive',
-          },
-          lastName: {
-            search: parsedAuthorName,
-            mode: 'insensitive',
-          },
-          patronymic: {
-            search: parsedAuthorName,
-            mode: 'insensitive',
-          },
-        },
-      };
-    }
 
     return this.prisma.ipr.count(args);
   }
@@ -136,7 +50,7 @@ export class IprService {
   public async createIpr(data: CreateIprRequest, userId: string): Promise<Ipr> {
     const { authors, publicationObjectTypeId, ...props } = data;
 
-    return this.prisma.ipr.create({
+    const ipr = await this.prisma.ipr.create({
       data: {
         ...props,
         createdBy: {
@@ -158,6 +72,26 @@ export class IprService {
         authors: true,
       },
     });
+
+    await this.prisma.iprUpdatesLog.create({
+      data: {
+        type: IprUpdatesLogsType.Update,
+        description: 'Додавання права інтелектуальної власності до реєстру',
+        updateReason: 'Ipr creation',
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
+        ipr: {
+          connect: {
+            id: ipr.id,
+          },
+        },
+      },
+    });
+
+    return ipr;
   }
 
   public async getIpr(id: string): Promise<Ipr> {
@@ -172,32 +106,133 @@ export class IprService {
     });
   }
 
-  public async updateIpr(id: string, data: UpdateIprRequest): Promise<Ipr> {
+  public async updateIpr(
+    id: string,
+    data: UpdateIprRequest,
+    user: User,
+  ): Promise<Ipr> {
     const { authors, deleteAuthors, publicationObjectTypeId, ...props } = data;
-    const delAuthors = deleteAuthors.map((item) => {
-      return { id: item };
+
+    const checkIpr = await this.prisma.ipr.findUnique({
+      where: {
+        id,
+      },
     });
 
-    return this.prisma.ipr.update({
+    if (checkIpr.userId !== user.id && user.role !== UserRole.Administrator) {
+      throw new UnauthorizedException(
+        'You have no permission to perform this operation',
+      );
+    }
+
+    const args: Prisma.IprUpdateArgs = {
       where: {
         id,
       },
       data: {
         ...props,
-        publicationObject: {
-          connect: {
-            id: publicationObjectTypeId,
-          },
-        },
-        authors: {
-          create: authors,
-          deleteMany: delAuthors,
-        },
       },
       include: {
         publicationObject: true,
         authors: true,
       },
+    };
+
+    if (publicationObjectTypeId) {
+      args.data.publicationObject = {
+        connect: {
+          id: publicationObjectTypeId,
+        },
+      };
+    }
+
+    if (authors) {
+      args.data.authors = args.data.authors ?? {};
+      args.data.authors.create = authors;
+    }
+
+    if (deleteAuthors) {
+      const delAuthors = deleteAuthors.map((item) => {
+        return { id: item };
+      });
+      args.data.authors = args.data.authors ?? {};
+      args.data.authors.deleteMany = delAuthors;
+    }
+
+    const ipr = await this.prisma.ipr.update(args);
+
+    await this.prisma.iprUpdatesLog.create({
+      data: {
+        type: IprUpdatesLogsType.Create,
+        description: 'Редагування права інтелектуальної власності у реєстрі',
+        updateReason: 'Ipr update',
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        ipr: {
+          connect: {
+            id: ipr.id,
+          },
+        },
+      },
     });
+
+    return ipr;
+  }
+
+  private static generateIprWhereInput(
+    query: GetIprsRequest | CountIprsRequest,
+  ): Prisma.IprWhereInput {
+    const {
+      publicationTitle,
+      publicationObjectTypeId,
+      authorName,
+      copyrightRegistrationNumber,
+    } = query;
+
+    const whereInput: Prisma.IprWhereInput = {};
+
+    if (copyrightRegistrationNumber) {
+      whereInput.copyrightRegistrationNumber = copyrightRegistrationNumber;
+    }
+
+    if (publicationTitle) {
+      whereInput.publicationTitle = {
+        contains: publicationTitle,
+        mode: 'insensitive',
+      };
+    }
+
+    if (publicationObjectTypeId) {
+      whereInput.publicationObject = {
+        is: {
+          id: publicationObjectTypeId,
+        },
+      };
+    }
+
+    if (authorName) {
+      const parsedAuthorName = authorName.split(' ').join(' | ');
+      whereInput.authors = {
+        some: {
+          firstName: {
+            search: parsedAuthorName,
+            mode: 'insensitive',
+          },
+          lastName: {
+            search: parsedAuthorName,
+            mode: 'insensitive',
+          },
+          patronymic: {
+            search: parsedAuthorName,
+            mode: 'insensitive',
+          },
+        },
+      };
+    }
+
+    return whereInput;
   }
 }

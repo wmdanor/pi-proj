@@ -4,3 +4,6 @@ export * from './create-ipr.dto';
 export * from './get-iprs.dto';
 export * from './ipr.dto';
 export * from './update-ipr.dto';
+export * from './ipr-object-type.dto';
+export * from './ipr-author.dto';
+export * from './get-ipr-object-types.dto';
