@@ -9,15 +9,15 @@ datasource db {
 }
 
 model Author {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  firstName         String
-  lastName          String
-  patronymic        String
-  publicNameType    AuthorPublicNameType
-  publicName        String
-  birthdate         DateTime @db.Date
-  postalAddress     String
-  iprs              Ipr[]
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  firstName      String
+  lastName       String
+  patronymic     String
+  publicNameType AuthorPublicNameType
+  publicName     String
+  birthdate      DateTime             @db.Date
+  postalAddress  String
+  iprs           Ipr[]
 }
 
 model Ipr {
@@ -32,15 +32,16 @@ model Ipr {
   publicationTitle            String
   publicationAlternativeTitle String?
   publicationObject           PublicationObjectType @relation(fields: [publicationObjectTypeId], references: [id])
-  publicationOrigin           PublicationOrigin
+  publicationOrigin           String
   publicationCreationReason   String
-  author                      Author                @relation(fields: [authorId], references: [id])
+  authors                     Author[]
   publicationPublicData       String?
   paymentReceiptCode          String?
+  createdBy                   User                  @relation(fields: [userId], references: [id])
 
   iprUpdatesLogs          IprUpdatesLog[]
   publicationObjectTypeId String          @db.Uuid
-  authorId                String          @db.Uuid
+  userId                  String          @db.Uuid
 }
 
 model IprUpdatesLog {
@@ -93,8 +94,9 @@ model User {
   organizationPosition String?
   isActive             Boolean       @default(true)
 
-  iprUpdatesLogs       IprUpdatesLog[]
-  organizationId       String?         @db.Uuid
+  iprUpdatesLogs IprUpdatesLog[]
+  organizationId String?         @db.Uuid
+  Ipr            Ipr[]
 }
 
 model PublicationObjectType {
@@ -112,11 +114,6 @@ enum IprUpdatesLogsType {
   Update
   Delete
   Create
-}
-
-enum PublicationOrigin {
-  Derivative
-  NonDerivative
 }
 
 enum UserRole {
