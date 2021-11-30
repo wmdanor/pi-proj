@@ -1,6 +1,6 @@
 <div class="container">
         <h4 class="mb-3 d-flex align-items-center justify-content-center">Додати реєстратора</h4>
-        <form  [formGroup]="addRegistrarFrom" ngNativeValidate class="form-horizontal" (ngSubmit)="onSubmit()">
+        <form  [formGroup]="addRegistrarForm" ngNativeValidate class="form-horizontal" (ngSubmit)="onSubmit()">
             <div class="row g-3">
                 <div class="col-12">
                 <label for="email" class="form-label">Електронна почта </label>
@@ -50,11 +50,11 @@
                 <h5 class="mb-3">Дані про організацію в якій працює реєстратор</h5>
                 <div class="col-12">
                     <label for="address2" class="form-label">Назва</label>
-                    <input formControlName="organizationId" type="text" class="form-control"    required>
+                    <input formControlName="organizationId" type="text" class="form-control"    >
                 </div>
                 <div class="col-12">
                     <label for="address2" class="form-label">Посада</label>
-                    <input formControlName="organizationPosition" type="text" class="form-control"    required>
+                    <input formControlName="organizationPosition" type="text" class="form-control"    >
                 </div>
                 <button class="w-40 btn btn-primary" type="submit">Додати</button>
             </div>

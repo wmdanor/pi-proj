@@ -13,7 +13,6 @@ export class EditRegistrarComponent implements OnInit {
   id: string = '';
   registrar = {} as User;
   
-
   addRegistrarFrom : FormGroup = this.formBuilder.group({
     email  : [{value: '', disabled: true }, [ Validators.required, Validators.email ]],
     fullName  :  ['', [ Validators.required ]] ,
@@ -45,13 +44,10 @@ export class EditRegistrarComponent implements OnInit {
   }
 
   idFromUrl() {
-
     this.route.params.subscribe(params => this.id = params.id);
-    
   }
 
   refreshForm() {
-    
     const fullName: string = `${this.registrar.lastName} ${this.registrar.firstName} ${this.registrar.patronymic}`
     this.addRegistrarFrom = this.formBuilder.group({
       email  :                this.registrar.email,
@@ -65,7 +61,6 @@ export class EditRegistrarComponent implements OnInit {
       organizationId  :       this.registrar.organizationId ,
       organizationPosition  :  this.registrar.organizationPosition ,
     });
-    console.log(this.addRegistrarFrom.value)
   }
 
   onSubmit(){

@@ -19,4 +19,5 @@ export interface User {
   organizationId: string | null
   organizationPosition: string | null
   accessToken?: string;
+  isActive?: boolean;
 }
