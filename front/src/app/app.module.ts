@@ -17,8 +17,9 @@ import { LoginComponent } from './components/login/login.component';
 // used to create fake backend
 import { fakeBackendProvider } from './helpers/fake-backend';
 import { DataService } from './services/data.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-
+import { MatPaginator } from '@angular/material/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,14 +33,15 @@ import { DataService } from './services/data.service';
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
     DataService,
 
-    // provider used to create fake backend
-    fakeBackendProvider
+    
 ],
   bootstrap: [AppComponent]
 })

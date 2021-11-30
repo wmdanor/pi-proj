@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Role } from 'src/app/models/role';
 import { User } from 'src/app/models/user';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { RegistrarsService } from 'src/app/services/registrars.service';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-registrars',
@@ -18,25 +19,33 @@ export class RegistrarsComponent implements OnInit {
   });
   registrars: User[] = [];
   loading = true;
-  currentPage = 1;
-  pages = 1;
+
+
+  pageIndex = 0;
+  pageSize = 10;
+  offset = 0;
+  count = 1;
+  q = '';
+  
+  @ViewChild(MatPaginator) paginator?: MatPaginator;
 
   constructor(
     private authService: AuthenticationService,  
     private router: Router, 
     private formBuilder: FormBuilder, 
-    private registrarsService: RegistrarsService
+    private registrarsService: RegistrarsService,
   ) { 
     this.authService.currentUser.subscribe(user => this.currentUser = user);
   }
 
   ngOnInit(): void {
     this.loading = true;
-    this.registrarsService.getRegistrars(10,0)
+    this.registrarsService.getRegistrars('', 10, 0)
       .subscribe(
         data => {
           this.loading = false;
-          this.registrars = data;
+          this.registrars = data.data;
+          this.countRegistrars('');
         },
         error => {
           this.loading = false;
@@ -44,8 +53,47 @@ export class RegistrarsComponent implements OnInit {
         });
   }
 
-  isAdmin(): boolean | undefined {
-    return this.currentUser && this.currentUser.role === Role.Admin;
+  countRegistrars(str: string){
+    this.registrarsService.getRegistrarsCount(str)
+      .subscribe(
+        data => {
+          this.count = data.count;
+        },
+        error => {
+          console.log(error)
+        });
+  }
+
+  searchRegistrar(): void {
+    this.registrarsService.getRegistrars(this.searchRegistrarForm.value.data, this.pageSize, 0)
+      .subscribe(
+        data => {
+          this.registrars = data.data;
+          this.countRegistrars(this.searchRegistrarForm.value.data);
+          this.paginator?.firstPage()
+        },
+        error => {
+          console.log(error)
+        });      
+  }
+
+  public getPaginatorData(event: PageEvent): PageEvent {
+    this.pageSize = event.pageSize;
+    this.offset = event.pageIndex*event.pageSize;
+    this.registrarsService.getRegistrars(this.searchRegistrarForm.value.data, event.pageSize, event.pageIndex*event.pageSize)
+        .subscribe(
+          data => {
+            this.registrars = data.data;
+            this.countRegistrars(this.searchRegistrarForm.value.data);
+          },
+          error => {
+            console.log(error)
+          });
+    return event;
+  }
+ 
+  goToRegistrar(userId: string){
+    this.router.navigate(['registrar/'+userId])
   }
 
   addRegistrar(): void {
@@ -56,27 +104,8 @@ export class RegistrarsComponent implements OnInit {
     this.router.navigate([`registrar/edit/${id}`]);
   }
 
-  searchRegistrar(): void {
-    if(this.searchRegistrarForm.value.data !== ''){
-      console.log(this.searchRegistrarForm.value)
-    }
+  
+  isAdmin(): boolean | undefined {
+    return this.currentUser && this.currentUser.role === Role.Admin;
   }
-
-  goToUser(userId: string){
-
-  }
-
-  nextPage(){
-    if (this.currentPage !== this.pages){
-      this.currentPage += 1
-    }
-  }
-
-  prevPage(){
-    if (this.currentPage != 1){
-      this.currentPage -= 1;
-    }
-    
-  }
-
 }

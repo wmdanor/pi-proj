@@ -13,18 +13,17 @@ export class EditRegistrarComponent implements OnInit {
   id: string = '';
   registrar = {} as User;
   
-
   addRegistrarFrom : FormGroup = this.formBuilder.group({
-    email  : ['', [ Validators.required, Validators.email ]],
+    email  : [{value: '', disabled: true }, [ Validators.required, Validators.email ]],
     fullName  :  ['', [ Validators.required ]] ,
-    birthDate  :   '',
+    birthDate  :   {value: '', disabled: true },
     passportSeries  :   '',
     passportNumber  :   '',
     passportIssueDate  :   '',
     passportAuthority  :   '',
-    inn :   '',
-    organizationId  :   '',
-    organizationPosition  :   '',
+    inn :   {value: '', disabled: true },
+    organizationId  :   {value: '', disabled: true },
+    organizationPosition  :   {value: '', disabled: true },
   });
 
   constructor(private route: ActivatedRoute, private registrarService: RegistrarsService, private formBuilder: FormBuilder,) { }
@@ -35,6 +34,7 @@ export class EditRegistrarComponent implements OnInit {
       .subscribe(
         data => {
           this.registrar = data;
+          console.log(this.registrar)
           this.refreshForm()
         },
         error => {
@@ -44,25 +44,22 @@ export class EditRegistrarComponent implements OnInit {
   }
 
   idFromUrl() {
-
     this.route.params.subscribe(params => this.id = params.id);
-    
   }
 
   refreshForm() {
-    
     const fullName: string = `${this.registrar.lastName} ${this.registrar.firstName} ${this.registrar.patronymic}`
     this.addRegistrarFrom = this.formBuilder.group({
-      email  : [this.registrar.email, [ Validators.required, Validators.email ]],
-      fullName  :  [fullName, [ Validators.required ]] ,
-      birthDate  :   '',
-      passportSeries  :   this.registrar.passportSeries,
-      passportNumber  :   this.registrar.passportNumber,
-      passportIssueDate  :   '',
-      passportAuthority  :   this.registrar.passportAuthority,
-      inn :   this.registrar.inn,
-      organizationId  :   this.registrar.organizationId,
-      organizationPosition  :   this.registrar.organizationPosition,
+      email  :                this.registrar.email,
+      fullName  :             fullName,  
+      birthDate  :            this.registrar.birthDate.substr(0, 10),
+      passportSeries  :       this.registrar.passportSeries,
+      passportNumber  :       this.registrar.passportNumber,
+      passportIssueDate  :    this.registrar.passportIssueDate.substr(0, 10),
+      passportAuthority  :    this.registrar.passportAuthority,
+      inn :                   this.registrar.inn ,
+      organizationId  :       this.registrar.organizationId ,
+      organizationPosition  :  this.registrar.organizationPosition ,
     });
   }
 

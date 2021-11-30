@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RegistrarsService } from 'src/app/services/registrars.service';
 
 @Component({
   selector: 'app-add-registrar',
@@ -7,8 +8,9 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./add-registrar.component.scss']
 })
 export class AddRegistrarComponent implements OnInit {
+  error = ''
 
-  addRegistrarFrom : FormGroup = this.formBuilder.group({
+  addRegistrarForm : FormGroup = this.formBuilder.group({
     email  : ['', [ Validators.required, Validators.email ]],
     fullName  :  ['', [ Validators.required ]] ,
     birthDate  :   '',
@@ -21,13 +23,27 @@ export class AddRegistrarComponent implements OnInit {
     organizationPosition  :   '',
   });
 
-  constructor(private formBuilder: FormBuilder, ) { }
+  constructor(private formBuilder: FormBuilder, private registrarsService: RegistrarsService) { }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
-    console.log(this.addRegistrarFrom.value)
+    const fullname = this.addRegistrarForm.value.fullName.split(' ')
+    const user = this.addRegistrarForm.value;
+    user.firstName = fullname[0];
+    user.lastName = fullname[1];
+    user.patronymic = fullname[2];
+    delete user.fullName
+    delete user.organizationId
+    delete user.organizationPosition
+    
+    this.registrarsService.addRegistrar(user)
+      .subscribe(
+        data => console.log(data),
+        error => alert(error)
+      )
+    
   }
 
 }

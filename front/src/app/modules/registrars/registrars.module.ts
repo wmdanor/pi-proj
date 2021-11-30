@@ -7,17 +7,23 @@ import { RegistrarsComponent } from './components/registrars/registrars.componen
 import { ReactiveFormsModule } from '@angular/forms';
 import { AddRegistrarComponent } from './components/add-registrar/add-registrar.component';
 import { EditRegistrarComponent } from './components/edit-registrar/edit-registrar.component';
+import { RegistrarComponent } from './components/registrar/registrar.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
+    RegistrarComponent,
     RegistrarsComponent,
     AddRegistrarComponent,
-    EditRegistrarComponent
+    EditRegistrarComponent,
   ],
   imports: [
     CommonModule,
     RegistrarsRoutingModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+    MatPaginatorModule,
+  ],
+
+
 })
 export class RegistrarsModule { }

@@ -1,1 +1,53 @@
-<p>registrar works!</p>
+<div class="container">
+    <h4 class="mb-3 d-flex align-items-center justify-content-center">Додати реєстратора</h4>
+        <div class="row g-3">
+            <div class="col-12">
+                <p><b>Електронна адреса:</b>   {{registrar.email}}</p>
+            </div>
+            <hr class="my-4">
+            <h5 class="mb-3">Паспортні дані</h5>
+            <div class="col-6">
+                <p>ПІБ: {{fullName}}</p>
+            </div>
+
+            <div class="col-6">
+                <p>Дата народження: {{registrar.birthDate}}</p>
+            </div>
+            
+            <div class="col-6">
+                <p>Серія: {{registrar.passportSeries}}</p>
+            </div>
+
+            <div class="col-6">
+                <p>Номер: {{registrar.passportNumber}}</p>
+            </div>
+
+            <div class="col-6">
+                <p>Дата видачі: {{registrar.passportIssueDate}}</p>
+            </div>
+            <div class="col-6">
+                <p>Орган що видав: {{registrar.passportAuthority}}</p>
+            </div>
+            
+            <hr class="my-4">
+
+            <div class="col-12">
+                <p>ІПН: {{registrar.inn}}</p>
+            </div>
+            <hr class="my-4">
+            <h5 class="mb-3">Дані про організацію в якій працює реєстратор</h5>
+            <div class="col-12">
+                <p>Назва: {{registrar.organizationId}}</p>
+            </div>
+            <div class="col-12">
+                <p>Посада: {{registrar.organizationPosition}}</p>
+            </div>
+            <hr class="my-4">
+            <div class="col-12">
+                <div *ngIf="!registrar.isActive; then activateButtonBlock else deactivateButtonBlock"></div>
+                <ng-template #activateButtonBlock><button (click)="toggleIsActive()" class="btn btn-success">Активувати</button></ng-template>  
+                <ng-template #deactivateButtonBlock><button (click)="toggleIsActive()" class="btn btn-danger">Деактивувати</button></ng-template>
+            </div>
+        </div>
+  
+  </div>
