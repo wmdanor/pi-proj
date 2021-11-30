@@ -9,21 +9,22 @@ import { User } from '../models/user';
 })
 export class RegistrarsService {
 
-getRegistrarsUrl = `${environment.apiUrl}/registrar?`; 
-getByIdUrl = `${environment.apiUrl}/registrar/`;
+  getRegistrarsUrl = `${environment.apiUrl.RecordersUrl}`; 
+  getByIdUrl = `${environment.apiUrl.RecordersUrl}/`;
 
-constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
+  
   getRegistrars(limit: number, offset: number) {
-    return this.http.get<User[]>(`${this.getRegistrarsUrl}limit=${limit}&offset=${offset}`)
-      .pipe(map(retistrars => {
-          return retistrars;
+    return this.http.get<any>('http://localhost:3000/api/users/recorders')
+      .pipe(map(data => {
+          return data;
       }));
   }
 
   getRegistrarById(id: string) {
-    return this.http.get<User>(`${this.getByIdUrl}` + id)
+    return this.http.get<any>(`${this.getByIdUrl}` + id)
       .pipe(map(registrar => {
-          return registrar;
+          return registrar.data;
       }));
   }
 }

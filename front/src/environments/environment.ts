@@ -5,7 +5,7 @@
 const apiUrl = {
   RecordersUrl: 'http://localhost:3000/api/users/recorders',
   IprsUrl: 'http://localhost:3000/api/ipr',
-  authUrl: 'localhost:3000/api/auth',
+  authUrl: 'http://localhost:3000/api/auth',
 }
 
 export const environment = {

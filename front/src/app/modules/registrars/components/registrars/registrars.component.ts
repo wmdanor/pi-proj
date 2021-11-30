@@ -36,7 +36,7 @@ export class RegistrarsComponent implements OnInit {
       .subscribe(
         data => {
           this.loading = false;
-          this.registrars = data;
+          this.registrars = data.data;
         },
         error => {
           this.loading = false;
