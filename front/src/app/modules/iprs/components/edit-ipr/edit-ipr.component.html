@@ -38,7 +38,7 @@
             </div>
             <div class="col-12">
                 <label for="publicationAlternativeTitle" class="form-label">Альтернативна назва твору</label>
-                <input formControlName="publicationAlternativeTitle" type="text" class="form-control" id="officialBulletinNumber"  required>
+                <input formControlName="publicationAlternativeTitle" type="text" class="form-control" id="officialBulletinNumber"  >
             </div>
             <div class="col-12">
                 <label for="publicationOrigin" class="form-label">Дані про походження твору (похідний, непохідний)</label>
@@ -53,11 +53,11 @@
             </div>
             <div class="col-12">
                 <label for="publicationPublicData" class="form-label">Публічна інформація</label>
-                <input formControlName="publicationPublicData" type="text" class="form-control" id="publicationPublicData"  required>
+                <input formControlName="publicationPublicData" type="text" class="form-control" id="publicationPublicData"  >
             </div>
             <div class="col-12">
                 <label for="paymentReceiptCode" class="form-label">Код квитанції про сплату реєстраційного збору</label>
-                <input formControlName="paymentReceiptCode" type="text" class="form-control" id="paymentReceiptCode"  required>
+                <input formControlName="paymentReceiptCode" type="text" class="form-control" id="paymentReceiptCode"  >
             </div>
 
             <div class="col-12">
@@ -87,6 +87,10 @@
                                 <input formControlName="patronymic" type="text" class="form-control" id="patronymic"  required>
                             </div>
                             <div class="col-7">
+                                <label for="publicName" class="form-label">Публічне ім'я</label>
+                                <input formControlName="publicName" type="text" class="form-control" id="publicName"  >
+                            </div>
+                            <div class="col-7">
                                 <label for="publicNameType" class="form-label">Тип публічного імені</label>
                                 <select  class="form-select" formControlName="publicNameType"  aria-label="select publication object"> 
                                     <option value='RealName'>справжнє ім'я</option>
@@ -110,7 +114,7 @@
                 </div>
             </div>
             <hr class="my-4">
-            <button class="btn btn-primary" type="submit">Додати</button>
+            <button class="btn btn-primary" type="submit">Редагувати</button>
         </div>
     </form>
   </div>

@@ -61,10 +61,6 @@ export class EditIprComponent implements OnInit {
         data => {
           this.ipr = data.data;
           this.refreshForm()
-          console.log(this.ipr)
-
-          console.log(this.addIprForm.value)
-
         },
         error => {
           console.log(error)
@@ -90,9 +86,11 @@ export class EditIprComponent implements OnInit {
 
 
   addCurrentAuthor(author: Author) {
-    console.log(this.authors)
+    const {birthdate, ...other} = author
+    
     this.authors.push(this.formBuilder.group({
-      ...author
+      ...other,
+      birthdate: birthdate.substr(0, 10)
     }));
   }
 
@@ -118,11 +116,11 @@ export class EditIprComponent implements OnInit {
   }
   
   onSubmit() {
+    console.log(this.addIprForm.value)
     const ipr = this.addIprForm.value;
     this.iprService.editIpr(ipr, this.id)
       .subscribe(
         data => {
-          console.log(data)
           this.router.navigate(['ipr'])
         },
         error => alert(error)
@@ -144,9 +142,11 @@ export class EditIprComponent implements OnInit {
       publicationPublicData: this.ipr.publicationPublicData,
       paymentReceiptCode: this.ipr.paymentReceiptCode,
       publicationObjectTypeId: this.ipr.publicationObjectTypeId,
-      authors: this.formBuilder.array(this.ipr.authors?.map(item => this.formBuilder.group({...item})) ?? [])
+      authors: this.formBuilder.array([])
     });
-    
+    this.ipr.authors?.forEach(element => {
+      this.addCurrentAuthor(element)
+    });
   }
 
 }
