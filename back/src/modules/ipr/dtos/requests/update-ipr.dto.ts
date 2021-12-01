@@ -4,12 +4,17 @@ import {
   IsEnum,
   IsOptional,
   IsString,
+  IsUUID,
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { AuthorPublicNameType } from '@prisma/client';
 
 export class UpdateIprRequestAuthor {
+  @IsOptional()
+  @IsUUID()
+  public id?: string;
+
   @IsString()
   public firstName: string;
 
@@ -98,8 +103,4 @@ export class UpdateIprRequest {
   @ValidateNested({ each: true })
   @Type(() => UpdateIprRequestAuthor)
   public authors?: UpdateIprRequestAuthor[];
-
-  @IsOptional()
-  @IsArray()
-  public deleteAuthors?: string[];
 }
