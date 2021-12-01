@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { RegistrarsService } from 'src/app/services/registrars.service';
 
 @Component({
@@ -19,11 +20,15 @@ export class AddRegistrarComponent implements OnInit {
     passportIssueDate  :   '',
     passportAuthority  :   '',
     inn :   '',
-    organizationId  :   '',
+    organizationName  :   '',
+    organizationAddressCity: '',
+    organizationAddressDistrict: '',
+    organizationAddressStreet: '',
+    organizationAddressHouse: '',
     organizationPosition  :   '',
   });
 
-  constructor(private formBuilder: FormBuilder, private registrarsService: RegistrarsService) { }
+  constructor(private formBuilder: FormBuilder, private registrarsService: RegistrarsService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -35,12 +40,24 @@ export class AddRegistrarComponent implements OnInit {
     user.lastName = fullname[1];
     user.patronymic = fullname[2];
     delete user.fullName
-    delete user.organizationId
-    delete user.organizationPosition
-    
+    const organization ={
+      name: this.addRegistrarForm.value.organizationName,
+      addressCity: this.addRegistrarForm.value.organizationAddressCity,
+      addressDistrict: this.addRegistrarForm.value.organizationAddressDistrict,
+      addressStreet: this.addRegistrarForm.value.organizationAddressStreet,
+      addressHouse: this.addRegistrarForm.value.organizationAddressHouse,
+    }
+    delete user.organizationName
+    delete user.organizationAddressCity
+    delete user.organizationAddressDistrict
+    delete user.organizationAddressStreet
+    delete user.organizationAddressHouse
+    user.organization = organization;
+    console.log(user);
     this.registrarsService.addRegistrar(user)
       .subscribe(
-        data => console.log(data),
+        data => {console.log(data)
+        this.router.navigate(['registrar/'+data.id])},
         error => alert(error)
       )
     

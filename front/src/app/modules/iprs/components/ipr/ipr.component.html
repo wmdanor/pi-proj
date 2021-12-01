@@ -34,7 +34,7 @@
                     <p><b>Адресса:</b> {{item.postalAddress}} </p>
                     
                 </div>
-                <button (click)="editIpr()" class="btn btn-primary">Редагувати</button>
+                <button *ngIf="logged" (click)="editIpr()" class="btn btn-primary">Редагувати</button>
             </div>
         </div>
   

@@ -32,7 +32,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     data: { roles: [Role.Admin] }
   },
-  { path: '**', redirectTo: 'home' }
+  { path: '**', redirectTo: 'ipr' }
 ];
 
 @NgModule({

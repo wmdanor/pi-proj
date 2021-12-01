@@ -121,7 +121,7 @@ export class EditIprComponent implements OnInit {
     this.iprService.editIpr(ipr, this.id)
       .subscribe(
         data => {
-          this.router.navigate(['ipr'])
+          this.router.navigate(['ipr/'+data.id])
         },
         error => alert(error)
       )

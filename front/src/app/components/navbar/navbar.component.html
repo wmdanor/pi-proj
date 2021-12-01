@@ -10,9 +10,6 @@
         <li><a class="nav-link px-2 text-white" routerLink='registrar' *ngIf="isAdmin()">Реєстратори</a></li>
         <li><a class="nav-link px-2 text-white" routerLink='logs' *ngIf="isAdmin()">Журнал</a></li>
       </ul>
-      <div class="text-end px-2">
-        <p class="m-0">Hello, {{currentUser?.firstName}}!</p>
-      </div>
       <div class="text-end login-btn" *ngIf="!logged; else logOutBlock">
         <button (click)="logIn()" type="button" class="btn btn-outline-light">Ввійти</button>
       </div>
