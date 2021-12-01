@@ -24,4 +24,5 @@ export interface User {
   organizationAddressDistrict?:  string
   organizationAddressStreet?:  string
   organizationAddressHouse?:string
+  organizationName?:string
 }

@@ -21,7 +21,14 @@ export class RegistrarComponent implements OnInit {
       .subscribe(
         data => {
           this.registrar = data;
-          
+          console.log(this.registrar)
+          this.registrar.organizationName  =data.organization.name,
+          this.registrar.organizationAddressCity=data.organization.addressCity,
+          this.registrar.organizationAddressDistrict=data.organization.addressDistrict,
+          this.registrar.organizationAddressStreet=data.organization.addressStreet,
+          this.registrar.organizationAddressHouse=data.organization.addressHouse,
+          this.registrar.organizationName=data.organization.name,
+
           this.fullName = `${this.registrar.lastName} ${this.registrar.firstName} ${this.registrar.patronymic}`
           this.registrar.birthDate = this.registrar.birthDate.substr(0, 10);
           this.registrar.passportIssueDate = this.registrar.passportIssueDate.substr(0, 10);

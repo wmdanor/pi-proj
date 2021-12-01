@@ -58,7 +58,7 @@ export class AddIprComponent implements OnInit {
       .subscribe(
         data => {
           console.log(data)
-          this.router.navigate(['ipr'])
+          this.router.navigate(['ipr/'+data.id])
         },
         error => alert(error)
       )

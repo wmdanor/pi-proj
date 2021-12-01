@@ -38,6 +38,12 @@ export class EditRegistrarComponent implements OnInit {
       .subscribe(
         data => {
           this.registrar = data;
+          this.registrar.organizationName  =data.organization.name,
+          this.registrar.organizationAddressCity=data.organization.addressCity,
+          this.registrar.organizationAddressDistrict=data.organization.addressDistrict,
+          this.registrar.organizationAddressStreet=data.organization.addressStreet,
+          this.registrar.organizationAddressHouse=data.organization.addressHouse,
+          
           console.log(this.registrar)
           this.refreshForm()
         },
@@ -63,7 +69,7 @@ export class EditRegistrarComponent implements OnInit {
       passportAuthority  :    this.registrar.passportAuthority,
       inn :                   this.registrar.inn ,
       organizationId  :       this.registrar.organizationId ,
-      organizationName  :    this.registrar.organizationId,
+      organizationName  :    this.registrar.organizationName,
       organizationAddressCity:  this.registrar.organizationAddressCity,
       organizationAddressDistrict:  this.registrar.organizationAddressDistrict,
       organizationAddressStreet:  this.registrar.organizationAddressStreet,
@@ -76,6 +82,7 @@ export class EditRegistrarComponent implements OnInit {
     const fullname = this.addRegistrarFrom.value.fullName.split(' ')
     if (!fullname[0] || !fullname[1] || !fullname[2]){alert('Вкажіть ПОвне ПІВ')}
     const organization ={
+      id: this.registrar.organizationId,
       name: this.addRegistrarFrom.value.organizationName,
       addressCity: this.addRegistrarFrom.value.organizationAddressCity,
       addressDistrict: this.addRegistrarFrom.value.organizationAddressDistrict,
@@ -92,14 +99,16 @@ export class EditRegistrarComponent implements OnInit {
       passportNumber: this.addRegistrarFrom.value.passportNumber,
       passportAuthority: this.addRegistrarFrom.value.passportAuthority,
       passportIssueDate: this.addRegistrarFrom.value.passportIssueDate,
+      organizationId: this.registrar.organizationId,
+      organizationPosition  :    this.addRegistrarFrom.value.organizationPosition,
       organization: {}
     }
     data.organization = organization;
     console.log(data)
-    // return this.registrarService.editRegistrar(data, this.id)
-    //   .subscribe(
-    //     data => {this.router.navigate(['registrar/'+data.data.id])},
-    //     error => {console.error(error)}
-    //   )
+    return this.registrarService.editRegistrar(data, this.id)
+      .subscribe(
+        data => {this.router.navigate(['registrar/'+data.data.id])},
+        error => {console.error(error)}
+      )
   }
 }
