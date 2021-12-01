@@ -20,7 +20,7 @@
         </ng-template>
         <ng-template #registrarsBlock>
             <div class="registrars-list mt-3">
-                <ul class="list-group" *ngFor="let item of logs">
+                <ul class="list-group" *ngFor="let item of logs.slice(pageSize*pageIndex , (pageIndex+1)*pageSize)">
                     <li class="list-group-item">
                         <div class="row g-3">
                             <div class="col-9">
@@ -38,7 +38,7 @@
                 <mat-paginator #paginator
                     [length]="count"
                     [pageIndex]="pageIndex"
-                    [pageSize]=100
+                    [pageSize]=10
                     [pageSizeOptions]="[5, 10 ,20]"
                     (page)="getPaginatorData($event)"
                 ></mat-paginator>
