@@ -26,7 +26,7 @@ export class LogsComponent implements OnInit {
   constructor(private logsService: LogsService) { }
 
   ngOnInit(): void {
-    this.logsService.getLogs(10,0)
+    this.logsService.getLogs(100,0)
     .subscribe(
       data => {this.loading = false;
         this.logs = data.data;
