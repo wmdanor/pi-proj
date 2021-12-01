@@ -111,11 +111,14 @@ export class IprService {
     data: UpdateIprRequest,
     user: User,
   ): Promise<Ipr> {
-    const { authors, deleteAuthors, publicationObjectTypeId, ...props } = data;
+    const { authors, publicationObjectTypeId, ...props } = data;
 
     const checkIpr = await this.prisma.ipr.findUnique({
       where: {
         id,
+      },
+      include: {
+        authors: true,
       },
     });
 
@@ -147,16 +150,45 @@ export class IprService {
     }
 
     if (authors) {
-      args.data.authors = args.data.authors ?? {};
-      args.data.authors.create = authors;
-    }
-
-    if (deleteAuthors) {
-      const delAuthors = deleteAuthors.map((item) => {
-        return { id: item };
+      const connOrCr = authors.map((item) => {
+        const { id: authorId, ...other } = item;
+        return {
+          where: {
+            id: authorId,
+          },
+          create: other,
+        };
       });
+
+      const conn = authors
+        .filter((item) => item.id)
+        .map((item) => {
+          const { id: authorId, ...other } = item;
+          return { id: authorId };
+        });
+
+      const creat = authors
+        .filter((item) => !item.id)
+        .map((item) => {
+          const { id: authorId, ...other } = item;
+          return other;
+        });
+
+      const toDelAuthors = checkIpr.authors
+        .filter(
+          (itemCheck) => !authors.find((item) => item.id === itemCheck.id),
+        )
+        .map((item) => {
+          return { id: item.id };
+        });
+
+      // console.log(creat, conn, connOrCr, toDelAuthors);
+
       args.data.authors = args.data.authors ?? {};
-      args.data.authors.deleteMany = delAuthors;
+      args.data.authors.create = creat;
+      args.data.authors.connect = conn;
+      args.data.authors.deleteMany = toDelAuthors;
+      // args.data.authors.connectOrCreate = connOrCr;
     }
 
     const ipr = await this.prisma.ipr.update(args);
