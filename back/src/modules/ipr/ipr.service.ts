@@ -164,7 +164,13 @@ export class IprService {
         .filter((item) => item.id)
         .map((item) => {
           const { id: authorId, ...other } = item;
-          return { id: authorId };
+          // return { id: authorId };
+          return {
+            where: {
+              id: authorId,
+            },
+            data: other,
+          };
         });
 
       const creat = authors
@@ -186,7 +192,8 @@ export class IprService {
 
       args.data.authors = args.data.authors ?? {};
       args.data.authors.create = creat;
-      args.data.authors.connect = conn;
+      // args.data.authors.connect = conn;
+      args.data.authors.update = conn;
       args.data.authors.deleteMany = toDelAuthors;
       // args.data.authors.connectOrCreate = connOrCr;
     }
