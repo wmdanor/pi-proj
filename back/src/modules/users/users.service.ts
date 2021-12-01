@@ -5,6 +5,7 @@ import {
   CountRecordersRequest,
   CreateRecorderRequest,
   GetRecordersRequest,
+  UpdateRecorderRequest,
 } from '@modules/users/dtos/requests';
 import * as generator from 'generate-password';
 import * as bcrypt from 'bcrypt';
@@ -77,10 +78,15 @@ export class UsersService {
     });
   }
 
-  public async updateRecorder(id: string, data): Promise<User | null> {
-    return this.prisma.user.update({
+  public async updateRecorder(
+    id: string,
+    data: UpdateRecorderRequest,
+  ): Promise<User | null> {
+    const { organization, organizationId, ...props } = data;
+
+    const args: Prisma.UserUpdateArgs = {
       data: {
-        ...data,
+        ...props,
       },
       where: {
         id,
@@ -88,7 +94,15 @@ export class UsersService {
       include: {
         organization: true,
       },
-    });
+    };
+
+    if (organization) {
+      args.data.organization = {
+        update: organization,
+      };
+    }
+
+    return this.prisma.user.update(args);
   }
 
   public async activateRecorder(
