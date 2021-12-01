@@ -1,11 +1,38 @@
 import {
   IsDate,
+  IsOptional,
   IsString,
   MinLength,
   NotEquals,
   ValidateIf,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+
+export class UpdateRecorderRequestOrganization {
+  @IsOptional()
+  @IsString()
+  id?: string;
+
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  addressCity?: string;
+
+  @IsOptional()
+  @IsString()
+  addressDistrict?: string;
+
+  @IsOptional()
+  @IsString()
+  addressStreet?: string;
+
+  @IsOptional()
+  @IsString()
+  addressHouse?: string;
+}
 
 export class UpdateRecorderRequest {
   @NotEquals(null)
@@ -49,4 +76,11 @@ export class UpdateRecorderRequest {
   @Type(() => Date)
   @IsDate()
   public passportIssueDate?: string;
+
+  @IsOptional()
+  public organizationId?: string;
+
+  @IsOptional()
+  @Type(() => UpdateRecorderRequestOrganization)
+  public organization?: UpdateRecorderRequestOrganization;
 }

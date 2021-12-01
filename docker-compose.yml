@@ -30,7 +30,3 @@ services:
       - "3000:3000"
     container_name: back-container
     restart: always
-    links:
-      - database
-    depends_on:
-      - database
