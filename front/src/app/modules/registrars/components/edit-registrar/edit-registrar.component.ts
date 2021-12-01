@@ -64,6 +64,21 @@ export class EditRegistrarComponent implements OnInit {
   }
 
   onSubmit(){
-    console.log('EDITED')
+    const fullname = this.addRegistrarFrom.value.fullName.split(' ')
+    if (!fullname[0] || !fullname[1] || !fullname[2]){alert('Вкажіть ПОвне ПІВ')}
+    const data ={
+      firstName: fullname[0],
+      lastName: fullname[1],
+      patronymic: fullname[2],
+      passportSeries: this.addRegistrarFrom.value.passportSeries ,
+      passportNumber: this.addRegistrarFrom.value.passportNumber,
+      passportAuthority: this.addRegistrarFrom.value.passportAuthority,
+      passportIssueDate: this.addRegistrarFrom.value.passportIssueDate
+    }
+    return this.registrarService.editRegistrar(data, this.id)
+      .subscribe(
+        data => {},
+        error => {console.error(error)}
+      )
   }
 }

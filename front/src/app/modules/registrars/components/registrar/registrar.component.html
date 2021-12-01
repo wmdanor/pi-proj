@@ -47,7 +47,9 @@
                 <div *ngIf="!registrar.isActive; then activateButtonBlock else deactivateButtonBlock"></div>
                 <ng-template #activateButtonBlock><button (click)="toggleIsActive()" class="btn btn-success">Активувати</button></ng-template>  
                 <ng-template #deactivateButtonBlock><button (click)="toggleIsActive()" class="btn btn-danger">Деактивувати</button></ng-template>
+                <a class="btn btn-primary ms-3" (click)="editRegistrar()">Змінити</a>
             </div>
+            
         </div>
   
   </div>

@@ -12,36 +12,76 @@
         </div>
     </ng-template>
     <ng-template #registrarsBlock>
-        <div class="registrars-list mt-3">
-            <ul class="list-group" *ngFor="let item of iprs">
-                <li class="list-group-item">
-                    <div class="d-flex">
-                        <div class="d-flex flex-column mr-1">
-                            <p>Автор: {{item.authorPublicNameType}} </p>
-                            <p>Тип публікації: {{item.publicationType}}</p>
-                        </div> 
-                        Повна назва твору: {{item.publicationTitle}} 
+        <div class="row">
+            <div class="col-8">
+            <form [formGroup]="searchIprForm" (ngSubmit)="searchIpr()" class="nav col-12 col-lg-auto me-lg-auto flex-column">
+                <div class="me-md-3 form-group">
+                    <label>Введіть дані для пошуку</label>
+                    <div class="row">
+                        <div class="col-12 mt-3">
+                            <input type="text" class="form-control" formControlName="copyrightRegistrationNumber" placeholder="Номер реєстарції ПІВ"> 
+                        </div>
+                        <div class="col-6 mt-3">
+                            <input type="text" class="form-control" formControlName="publicationTitle" placeholder="Назва твору">  
+                        </div>
+                        <div class="col-6 mt-3">
+                            <input type="text" class="form-control" formControlName="authorName" placeholder="Ім'я автора">           
+                        </div>
+                        <div class="col-12 mt-3 mb-3">
+                            <label>Оберіть об'єкт публікації</label>
+                            <select  class="form-select" formControlName="publicationObjectTypeId"  aria-label="select publication object"> 
+                                <option value=''>Усі</option>
+
+                                <option *ngFor="let option of objectTypes" value={{option.id}}>{{option.name}}</option>
+                            </select>
+                        </div>
                     </div>
-                    <a class="link ipr-link" (click)="goToIpr(item.id)">Детальніше...</a>
-                </li>
-            </ul>
-            <nav class="mt-2" aria-label="Page navigation example">
-                <ul class="pagination align-items-center justify-content-center">
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-                </ul>
-            </nav>
+                </div>
+                <div class="align-self-end me-md-3">
+                    <button type="submit" class="btn btn-primary btn-outline-light">Знайти ПІВ</button>
+                </div>
+            </form>
+            </div>
+            <div class="col-4 d-flex align-items-end flex-column">
+                <div class="add-ipr-btn" *ngIf="isRegistrar() || isAdmin()">
+                    <a type="button" class="btn btn-primary btn-outline-light" routerLink="/ipr/add">Додати ПІВ</a>
+                </div>
+            </div>
         </div>
+        <div *ngIf="loading; then loadingBlock else registrarsBlock"></div>
+        <ng-template #loadingBlock>
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
+                <span #loadingBlock *ngIf="loading"class="spinner-border spinner-border-sm mr-1 mt-3 ms-auto me-auto"></span>
+            </div>
+        </ng-template>
+        <ng-template #registrarsBlock>
+            <div class="registrars-list mt-3">
+                <ul class="list-group" *ngFor="let item of iprs">
+                    <li class="list-group-item">
+                        <div class="row g-3">
+                            <div class="col-9">
+                                <p><b>Назва твору:</b> {{item.publicationTitle}} </p>
+                                <p><b>Об'єкт авторського права:</b> {{item.publicationObject?.name}} </p>
+                                <p><b>Публічна інформація:</b> {{item.publicationPublicData}}</p>
+                            </div>
+                            
+                            <div class="col-3 d-flex justify-content-end">
+                                <div class="me-2">
+                                    <a class="link-primary" (click)="goToIpr(item.id)">Детальніше...</a>
+                                </div>
+                            </div>
+                        </div> 
+                    </li>
+                </ul>
+                <mat-paginator #paginator
+                    [length]="count"
+                    [pageIndex]="pageIndex"
+                    [pageSize]=10
+                    [pageSizeOptions]="[5, 10 ,20]"
+                    (page)="getPaginatorData($event)"
+                ></mat-paginator>
+            </div>
+        </ng-template>
+        
     </ng-template>
 </ng-template>

@@ -1,8 +1,41 @@
-<div class="d-flex flex-column">
-
-    {{ipr.id}} <br>
-    {{ipr.authorPublicNameType}} <br>
-    {{ipr.publicationType}} <br>
-    {{ipr.publicationTitle}} <br>
-    
-</div>
+<div class="container">
+    <h4 class="mb-3 d-flex align-items-center justify-content-center">{{ipr.publicationTitle}}</h4>
+        <div class="row g-3">
+            <p *ngIf="ipr.publicationAlternativeTitle; else noAltTitleBlock">Альтернативна назва твору: {{ipr.publicationAlternativeTitle}}</p>
+            <ng-template #noAltTitleBlock>Альтернативна назва твору: відсутня</ng-template>
+            <hr class="my-4">
+            <h5 class="mb-3">Дати</h5>
+            <div class="row" >
+                <div class="col-6"><b>Дата подання заявки на реєстрацію:</b> {{applicationDate}}</div>
+                <div class="col-6"><b>Дата реєстрації  ПІВ: </b>{{copyrightRegistrationDate}}</div>
+                <div class="col-6"><b>Дата публікації відомостей про видачу свідоцтва: </b>{{certificateIssueDate}}</div>
+            </div>
+            <hr class="my-4">
+            <div class="row">
+                <div class="col-6">
+                    <p>Причина створення: {{ipr.publicationCreationReason}}</p>
+                    <p>Публічна інформація: {{ipr.publicationPublicData}}</p>
+                    <p>Походження твору: {{publicationOrigin}}</p>
+                </div>
+                <div class="col-6" >
+                    <p>Номер заявки: {{ipr.applicationNumber}}</p>
+                    <p>номер реєстрації: {{ipr.copyrightRegistrationNumber}}</p>
+                    <p>Номер бюлетеню: {{ipr.officialBulletinNumber}}</p>
+                    <p>Код квитанції про сплату: {{ipr.paymentReceiptCode}}</p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <h5 class="mb-3">Автори</h5>
+            <div class="row" >
+                <div class="col-6" *ngFor="let item of ipr.authors">
+                    <p><b>ПІБ: </b>{{item.firstName}} {{item.lastName}} {{item.patronymic}}</p>
+                    <p><b>Публічне ім'я:</b> {{item.publicName}} </p>
+                    <p><b>Тип публічного імені:</b> {{item.publicNameType}}</p>
+                    <p><b>Адресса:</b> {{item.postalAddress}} </p>
+                    
+                </div>
+                <button (click)="editIpr()" class="btn btn-primary">Редагувати</button>
+            </div>
+        </div>
+  
+  </div>

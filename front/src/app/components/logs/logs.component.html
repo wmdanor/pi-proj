@@ -1,1 +1,49 @@
-<p>logs works!</p>
+<div *ngIf="loading; then loadingBlock else showDataBlock"></div>
+<ng-template #loadingBlock>
+    <div class="d-flex flex-wrap align-items-center justify-content-center">
+        <span #loadingBlock *ngIf="loading"class="spinner-border spinner-border-sm mr-1 mt-3 ms-auto me-auto"></span>
+    </div>
+</ng-template>
+<ng-template #showDataBlock>
+    <div *ngIf="errorOccured; then errorBlock else registrarsBlock"></div>
+    <ng-template #errorBlock>
+        <div class="d-flex flex-wrap align-items-center justify-content-center">
+            <p class="text-danger">{{error.message}}</p>
+        </div>
+    </ng-template>
+    <ng-template #registrarsBlock>
+        <div *ngIf="loading; then loadingBlock else registrarsBlock"></div>
+        <ng-template #loadingBlock>
+            <div class="d-flex flex-wrap align-items-center justify-content-center">
+                <span #loadingBlock *ngIf="loading"class="spinner-border spinner-border-sm mr-1 mt-3 ms-auto me-auto"></span>
+            </div>
+        </ng-template>
+        <ng-template #registrarsBlock>
+            <div class="registrars-list mt-3">
+                <ul class="list-group" *ngFor="let item of logs">
+                    <li class="list-group-item">
+                        <div class="row g-3">
+                            <div class="col-9">
+                                <p><b>Тип:</b> {{item.type}} </p>
+                                <p><b>Причина зміни:</b> {{item.updateReason}} </p>
+                                <p><b>Опис:</b> {{item.description}}</p>
+                                <p><b>Ідентифікатор користувача:</b> {{item.userId}} </p>
+                                <p><b>Ідентифікатор ПІВ:</b> {{item.iprId}} </p>
+                                <p><b>Номер документу:</b> {{item.documentNumber}}</p>
+                            </div>
+
+                        </div> 
+                    </li>
+                </ul>
+                <mat-paginator #paginator
+                    [length]="count"
+                    [pageIndex]="pageIndex"
+                    [pageSize]=10
+                    [pageSizeOptions]="[5, 10 ,20]"
+                    (page)="getPaginatorData($event)"
+                ></mat-paginator>
+            </div>
+        </ng-template>
+        
+    </ng-template>
+</ng-template>

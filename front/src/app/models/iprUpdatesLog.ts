@@ -3,6 +3,7 @@ enum IprUpdatesLogsType {
 }
 export interface IprUpdatesLog {
   id: string
+  iprId: string;
   createdAt: Date
   userId: string
   affectedIprId: string

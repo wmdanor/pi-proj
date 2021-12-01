@@ -14,12 +14,10 @@ import { MainComponent } from './components/main/main.component';
 import { LogsComponent } from './components/logs/logs.component';
 import { LoginComponent } from './components/login/login.component';
 
-// used to create fake backend
-import { fakeBackendProvider } from './helpers/fake-backend';
 import { DataService } from './services/data.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginatorModule } from '@angular/material/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +32,7 @@ import { MatPaginator } from '@angular/material/paginator';
     HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    
+    MatPaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
