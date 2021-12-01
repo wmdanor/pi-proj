@@ -82,7 +82,7 @@ export class UsersService {
     id: string,
     data: UpdateRecorderRequest,
   ): Promise<User | null> {
-    const { organization, organizationId, ...props } = data;
+    const { organization, ...props } = data;
 
     const args: Prisma.UserUpdateArgs = {
       data: {

@@ -78,9 +78,10 @@ export class UpdateRecorderRequest {
   public passportIssueDate?: string;
 
   @IsOptional()
-  public organizationId?: string;
-
-  @IsOptional()
   @Type(() => UpdateRecorderRequestOrganization)
   public organization?: UpdateRecorderRequestOrganization;
+
+  @IsOptional()
+  @IsString()
+  public organizationPosition?: string;
 }
