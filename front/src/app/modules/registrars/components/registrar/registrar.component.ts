@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 import { RegistrarsService } from 'src/app/services/registrars.service';
 
@@ -13,7 +13,7 @@ export class RegistrarComponent implements OnInit {
   id = '';
   loading = true;
   fullName = ''
-  constructor(private route: ActivatedRoute, private registrarService: RegistrarsService) { }
+  constructor(private route: ActivatedRoute, private registrarService: RegistrarsService, private router: Router) { }
 
   ngOnInit(): void {
     this.idFromUrl();
@@ -21,7 +21,7 @@ export class RegistrarComponent implements OnInit {
       .subscribe(
         data => {
           this.registrar = data;
-          console.log(this.registrar.isActive)
+          
           this.fullName = `${this.registrar.lastName} ${this.registrar.firstName} ${this.registrar.patronymic}`
           this.registrar.birthDate = this.registrar.birthDate.substr(0, 10);
           this.registrar.passportIssueDate = this.registrar.passportIssueDate.substr(0, 10);
@@ -41,12 +41,18 @@ export class RegistrarComponent implements OnInit {
     .subscribe(
       data => {
         this.registrar.isActive = !this.registrar.isActive;
-        console.log(data)
+        
       },
       error => {
         console.log(error)
       }
     );
   }
+
+  editRegistrar(){
+    this.router.navigate(['registrar/edit/'+ this.id])
+  }
+
+ 
 
 }

@@ -7,8 +7,9 @@ import { IprsComponent } from './components/iprs/iprs.component';
 
 const routes: Routes = [
   { path: '', component: IprsComponent },
-  { path: ':id', component: IprComponent},
   { path: 'add', component: AddIprComponent },
+  { path: ':id', component: IprComponent},
+  
   { path: 'edit/:id', component: EditIprComponent },
 ];
 

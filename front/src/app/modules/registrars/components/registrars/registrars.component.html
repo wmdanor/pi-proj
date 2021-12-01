@@ -19,40 +19,30 @@
     <div class="registrars-list mt-3">
         <ul class="list-group" *ngFor="let item of registrars">
             <li class="list-group-item">
-                
-                    <div class="row g-3">
-                        <div class="col-3">
-                            <p>Ім'я: {{item.firstName}} </p>
-                            <p>почта: {{item.email}} </p>
+                <div class="row g-3">
+                    <div class="col-3">
+                        <p>Ім'я: {{item.firstName}} </p>
+                        <p>почта: {{item.email}} </p>
+                    </div>
+                    <div class="col-3">
+                        <p>Прізвище: {{item.lastName}}</p>
+                    </div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <div class="me-2">
+                            <div *ngIf="item.isActive; else inactiveBlock"> <p class="text-success">Активний</p> </div>
+                            <ng-template #inactiveBlock><p class="text-danger">Деактивований</p></ng-template>
+                            <a class="link-primary" (click)="goToRegistrar(item.id)">Детальніше...</a>
                         </div>
-                        <div class="col-3">
-                            <p>Прізвище: {{item.lastName}}</p>
-                        </div>
-                        <div class="col-6 d-flex justify-content-end">
-                            <div class="me-2">
-                                <div *ngIf="item.isActive; else inactiveBlock"> <p class="text-success">Активний</p> </div>
-                                <ng-template #inactiveBlock><p class="text-success">Деактивований</p></ng-template>
-                                <a class="link-primary" (click)="goToRegistrar(item.id)">Детальніше...</a>
-                            </div>
-                        </div>
-                    </div> 
-                    
-                
-                
-                
+                    </div>
+                </div> 
             </li>
         </ul>
-
         <mat-paginator #paginator
-            
             [length]="count"
             [pageIndex]="pageIndex"
             [pageSize]=10
-            [pageSizeOptions]="[1, 2, 5]"
+            [pageSizeOptions]="[5, 10 ,20]"
             (page)="getPaginatorData($event)"
-            
         ></mat-paginator>
-
-        
     </div>
 </ng-template>

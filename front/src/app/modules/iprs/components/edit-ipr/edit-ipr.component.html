@@ -1,1 +1,116 @@
-<p>edit-ipr works!</p>
+<div class="container">
+    <h4 class="mb-3 d-flex align-items-center justify-content-center">Додати ПІВ</h4>
+    <form  [formGroup]="addIprForm" ngNativeValidate class="form-horizontal" (ngSubmit)="onSubmit()">
+        <div class="row g-3">
+            <div class="col-12">
+            <label for="applicationNumber" class="form-label">Номер заявки на реєстрацію ПІВ </label>
+            <input formControlName="applicationNumber" type="text" class="form-control" required >
+            </div>
+
+            <div class="col-4">
+                <label for="applicationDate" class="form-label">Дата подання заявки</label>
+                <input formControlName="applicationDate" type="date" class="form-control" id="fullName"  required>
+            </div>
+
+            <div class="col-12">
+                <label for="copyrightRegistrationNumber" class="form-label">Номер реєстрації ПІВ, який є номером свідоцтва</label>
+                <input formControlName="copyrightRegistrationNumber" type="text" class="form-control" id="fullName"  required>
+            </div>
+            <div class="col-4">
+                <label for="copyrightRegistrationDate" class="form-label">Дата реєстрації  ПІВ</label>
+                <input formControlName="copyrightRegistrationDate" type="date" class="form-control" id="fullName"  required>
+            </div>
+            <div class="col-4">
+                <label for="certificateIssueDate" class="form-label">Дата публікації відомостей про видачу свідоцтва</label>
+                <input formControlName="certificateIssueDate" type="date" class="form-control" id="certificateIssueDate"  required>
+            </div>
+            <div class="col-12">
+                <label for="officialBulletinNumber" class="form-label">Номер офіційного бюлетеня</label>
+                <input formControlName="officialBulletinNumber" type="text" class="form-control" id="officialBulletinNumber"  required>
+            </div>
+            <div class="col-12">
+                <label for="publicationSphereData" class="form-label">Відомості про сферу творчої діяльності, до якої належить твір</label>
+                <input formControlName="publicationSphereData" type="text" class="form-control" id="officialBulletinNumber"  required>
+            </div>
+            <div class="col-12">
+                <label for="publicationTitle" class="form-label">Повна назва твору</label>
+                <input formControlName="publicationTitle" type="text" class="form-control" id="officialBulletinNumber"  required>
+            </div>
+            <div class="col-12">
+                <label for="publicationAlternativeTitle" class="form-label">Альтернативна назва твору</label>
+                <input formControlName="publicationAlternativeTitle" type="text" class="form-control" id="officialBulletinNumber"  required>
+            </div>
+            <div class="col-12">
+                <label for="publicationOrigin" class="form-label">Дані про походження твору (похідний, непохідний)</label>
+                <select  class="form-select" formControlName="publicationOrigin"  aria-label="select publication object"> 
+                    <option value='Derivative'>похідний</option>
+                    <option value='NonDerivative'>непохідний</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <label for="publicationCreationReason" class="form-label">Причина створення твору</label>
+                <input formControlName="publicationCreationReason" type="text" class="form-control" id="publicationCreationReason"  required>
+            </div>
+            <div class="col-12">
+                <label for="publicationPublicData" class="form-label">Публічна інформація</label>
+                <input formControlName="publicationPublicData" type="text" class="form-control" id="publicationPublicData"  required>
+            </div>
+            <div class="col-12">
+                <label for="paymentReceiptCode" class="form-label">Код квитанції про сплату реєстраційного збору</label>
+                <input formControlName="paymentReceiptCode" type="text" class="form-control" id="paymentReceiptCode"  required>
+            </div>
+
+            <div class="col-12">
+                <label for="publicationObjectTypeId" class="form-label">Об'єкт авторського права</label>
+                <select  class="form-select" formControlName="publicationObjectTypeId"  aria-label="select publication object"> 
+                    <option *ngFor="let option of objectTypes" value={{option.id}}>{{option.name}}</option>
+                </select>
+            </div>
+            <hr class="my-4">
+            
+            
+            <div class="col-12">
+                <div formArrayName="authors">
+                    <h5 class="mb-3">Автори</h5>
+                    <div *ngFor="let alias of authors.controls; let i=index">
+                        <div class="row mb-3" [formGroupName]="i">
+                            <div class="col-7">
+                                <label for="firstName" class="form-label">Ім'я</label>
+                                <input formControlName="firstName" type="text" class="form-control" id="author-{{ i }}"  required>
+                            </div>
+                            <div class="col-7">
+                                <label for="lastName" class="form-label">Прізвище</label>
+                                <input formControlName="lastName" type="text" class="form-control" id="lastName"  required>
+                            </div>
+                            <div class="col-7">
+                                <label for="patronymic" class="form-label">По батькові</label>
+                                <input formControlName="patronymic" type="text" class="form-control" id="patronymic"  required>
+                            </div>
+                            <div class="col-7">
+                                <label for="publicNameType" class="form-label">Тип публічного імені</label>
+                                <select  class="form-select" formControlName="publicNameType"  aria-label="select publication object"> 
+                                    <option value='RealName'>справжнє ім'я</option>
+                                    <option value='Pseudonym'>псевдонім</option>
+                                </select>
+                            </div>
+                            <div class="col-7">
+                                <label for="birthdate" class="form-label">Дата народження</label>
+                                <input formControlName="birthdate" type="date" class="form-control" id="birthdate"  required>
+                            </div>
+                            <div class="col-7">
+                                <label for="postalAddress" class="form-label">Адреса</label>
+                                <input formControlName="postalAddress" type="text" class="form-control" id="postalAddress"  required>
+                            </div>
+                            <div class="col-7">
+                            <button (click)="popAuthors(i)" class="btn btn-danger btn-sm me-3 mt-1">Прибрати автора</button>
+                        </div>
+                        </div>
+                      </div>
+                      <button (click)="addAuthor()" type="button" class="btn btn-info mb-1">Додати автора</button>
+                </div>
+            </div>
+            <hr class="my-4">
+            <button class="btn btn-primary" type="submit">Додати</button>
+        </div>
+    </form>
+  </div>

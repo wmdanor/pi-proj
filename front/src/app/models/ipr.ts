@@ -6,15 +6,30 @@ enum PublicationCreationReason {
     Test
 }
 
-enum PublicationObjectType {
-    Test
+export interface PublicationObjectType {
+    id?: string;
+    name?: string;
 }
 
-enum PublicationOrigin {
-    Derivative,
-    NonDerivative
+export interface PublicationOrigin {
+    Derivative: 'похідний',
+    NonDerivative :'не похідний'
+}
+enum PublicNameType {
+    RealName,
+    Pseudonym
 }
 
+export interface Author{
+    id: string,
+    firstName:	string
+    lastName	:string
+    patronymic	:string
+    publicNameType:	PublicNameType
+    publicName:	string
+    birthdate:	string
+    postalAddress:	string
+}
 
 export interface Ipr {
     id?: string
@@ -30,8 +45,9 @@ export interface Ipr {
     publicationAlternativeTitle?: string | null
     publicationOrigin?: PublicationOrigin
     publicationCreationReason?: PublicationCreationReason
-    authorPublicNameType?: string //AuthorPublicNameType
+    authors?: Author[]
     publicationObject?: PublicationObjectType
     publicationPublicData?: string | null
+    publicationObjectTypeId?: string
     paymentReceiptCode?: string | null
 }

@@ -53,6 +53,8 @@ export class RegistrarsComponent implements OnInit {
         });
   }
 
+
+
   countRegistrars(str: string){
     this.registrarsService.getRegistrarsCount(str)
       .subscribe(

@@ -44,12 +44,18 @@ export class RegistrarsService {
   }
 
   activateRegistrar(isActive: boolean, id: string){
-    console.log({isActive})
     return this.http.put<any>(`${environment.apiUrl.RecordersUrl}/` + id + '/activate', {isActive})
       .pipe(map(data => {
           return data;
       }));
     
+  }
+
+  editRegistrar(data:object, id:string){
+    return this.http.put<any>(`${environment.apiUrl.RecordersUrl}/` + id, data)
+      .pipe(map(data => {
+          return data;
+      }));
   }
 
 }
