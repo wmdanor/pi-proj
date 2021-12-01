@@ -20,4 +20,8 @@ export interface User {
   organizationPosition: string | null
   accessToken?: string;
   isActive?: boolean;
+  organizationAddressCity?:  string
+  organizationAddressDistrict?:  string
+  organizationAddressStreet?:  string
+  organizationAddressHouse?:string
 }

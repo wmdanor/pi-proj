@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RegistrarsService } from 'src/app/services/registrars.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/models/user';
 
 @Component({
@@ -22,11 +22,15 @@ export class EditRegistrarComponent implements OnInit {
     passportIssueDate  :   '',
     passportAuthority  :   '',
     inn :   {value: '', disabled: true },
-    organizationId  :   {value: '', disabled: true },
-    organizationPosition  :   {value: '', disabled: true },
+    organizationName  :   '',
+    organizationAddressCity: '',
+    organizationAddressDistrict: '',
+    organizationAddressStreet: '',
+    organizationAddressHouse: '',
+    organizationPosition  :   '',
   });
 
-  constructor(private route: ActivatedRoute, private registrarService: RegistrarsService, private formBuilder: FormBuilder,) { }
+  constructor(private route: ActivatedRoute, private registrarService: RegistrarsService, private formBuilder: FormBuilder, private router : Router) { }
 
   ngOnInit(): void {
     this.idFromUrl();
@@ -59,13 +63,27 @@ export class EditRegistrarComponent implements OnInit {
       passportAuthority  :    this.registrar.passportAuthority,
       inn :                   this.registrar.inn ,
       organizationId  :       this.registrar.organizationId ,
-      organizationPosition  :  this.registrar.organizationPosition ,
+      organizationName  :    this.registrar.organizationId,
+      organizationAddressCity:  this.registrar.organizationAddressCity,
+      organizationAddressDistrict:  this.registrar.organizationAddressDistrict,
+      organizationAddressStreet:  this.registrar.organizationAddressStreet,
+      organizationAddressHouse:  this.registrar.organizationAddressHouse,
+      organizationPosition  :    this.registrar.organizationPosition,
     });
   }
 
   onSubmit(){
     const fullname = this.addRegistrarFrom.value.fullName.split(' ')
     if (!fullname[0] || !fullname[1] || !fullname[2]){alert('Вкажіть ПОвне ПІВ')}
+    const organization ={
+      name: this.addRegistrarFrom.value.organizationName,
+      addressCity: this.addRegistrarFrom.value.organizationAddressCity,
+      addressDistrict: this.addRegistrarFrom.value.organizationAddressDistrict,
+      addressStreet: this.addRegistrarFrom.value.organizationAddressStreet,
+      addressHouse: this.addRegistrarFrom.value.organizationAddressHouse,
+    }
+
+    
     const data ={
       firstName: fullname[0],
       lastName: fullname[1],
@@ -73,12 +91,15 @@ export class EditRegistrarComponent implements OnInit {
       passportSeries: this.addRegistrarFrom.value.passportSeries ,
       passportNumber: this.addRegistrarFrom.value.passportNumber,
       passportAuthority: this.addRegistrarFrom.value.passportAuthority,
-      passportIssueDate: this.addRegistrarFrom.value.passportIssueDate
+      passportIssueDate: this.addRegistrarFrom.value.passportIssueDate,
+      organization: {}
     }
-    return this.registrarService.editRegistrar(data, this.id)
-      .subscribe(
-        data => {},
-        error => {console.error(error)}
-      )
+    data.organization = organization;
+    console.log(data)
+    // return this.registrarService.editRegistrar(data, this.id)
+    //   .subscribe(
+    //     data => {this.router.navigate(['registrar/'+data.data.id])},
+    //     error => {console.error(error)}
+    //   )
   }
 }

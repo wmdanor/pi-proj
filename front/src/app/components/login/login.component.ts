@@ -63,7 +63,7 @@ export class LoginComponent implements OnInit {
           },
           error => {
               console.log(error)
-              this.error = error;
+              this.error = 'Невірний логін чи пароль';
               this.loading = false;
           });
   }
